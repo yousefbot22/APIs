@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Song APIs</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, Tahoma, sans-serif;
+}
+
+body{
+  background:#020617;
+  color:white;
+  overflow-x:hidden;
+}
+
+/* BACKGROUND EFFECT */
+body::before, body::after{
+  content:"";
+  position:fixed;
+  width:400px;
+  height:400px;
+  filter:blur(60px);
+  opacity:.4;
+  pointer-events:none;
+}
+
+body::before{
+  top:-150px;
+  left:-150px;
+  background:radial-gradient(circle,#4f46e5,#020617);
+}
+
+body::after{
+  bottom:-150px;
+  right:-150px;
+  background:radial-gradient(circle,#22c55e,#020617);
+}
+
+/* TOPBAR */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  background:rgba(2,6,23,.7);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid #1f2937;
+  position:fixed;
+  width:100%;
+  top:0;
+  z-index:15;
+}
+
+.logo{
+  font-size:18px;
+  font-weight:bold;
+  background:linear-gradient(90deg,#4f46e5,#22c55e);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.menu-btn{
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:0;
+  right:-260px;
+  width:220px;
+  height:100%;
+  background:#020617;
+  border-left:1px solid #1f2937;
+  padding:20px;
+  transition:.4s;
+  z-index:10;
+}
+
+.sidebar.active{
+  right:0;
+}
+
+.sidebar-header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.sidebar-header img{
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  border:2px solid #4f46e5;
+  margin-bottom:8px;
+}
+
+.sidebar-header h3{
+  font-size:14px;
+  color:#9ca3af;
+}
+
+.menu a{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px;
+  margin-bottom:8px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#9ca3af;
+  transition:.25s;
+  font-size:13px;
+  direction:rtl;
+}
+
+.menu a.active{
+  background:linear-gradient(90deg,#4f46e5,#22c55e);
+  color:white;
+}
+
+.menu a:hover{
+  background:#0f172a;
+  color:white;
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(2px);
+  opacity:0;
+  visibility:hidden;
+  transition:.3s;
+  z-index:5;
+}
+
+.overlay.active{
+  opacity:1;
+  visibility:visible;
+}
+
+/* PAGE */
+.container{
+  padding:80px 20px 20px 20px;
+  max-width:500px;
+  margin:auto;
+}
+
+.page-title{
+  font-size:22px;
+  background:linear-gradient(90deg,#4f46e5,#22c55e);
+  -webkit-background-clip:text;
+  color:transparent;
+  margin-bottom:6px;
+  text-align:right;
+}
+
+.page-desc{
+  color:#9ca3af;
+  margin-bottom:15px;
+  font-size:13px;
+  text-align:right;
+}
+
+/* API CARD */
+.api-card{
+  background:rgba(15,23,42,.6);
+  backdrop-filter:blur(8px);
+  border:1px solid #1f2937;
+  border-radius:15px;
+  padding:18px;
+  margin-bottom:15px;
+  text-align:right;
+}
+
+.endpoint{
+  background:#111827;
+  padding:8px;
+  border-radius:6px;
+  font-size:12px;
+  word-break:break-all;
+  margin-bottom:10px;
+}
+
+/* INPUT */
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #1f2937;
+  background:#020617;
+  color:white;
+  margin-bottom:10px;
+  font-size:13px;
+  text-align:right;
+}
+
+/* BUTTONS */
+.btn{
+  padding:8px 12px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  margin-right:5px;
+  transition:.3s;
+  font-size:13px;
+}
+
+.primary{
+  background:linear-gradient(90deg,#6366f1,#22c55e);
+  color:white;
+}
+
+.secondary{
+  background:#020617;
+  border:1px solid #1f2937;
+  color:#9ca3af;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#6366f1;
+  padding:8px 16px;
+  border-radius:10px;
+  color:white;
+  font-weight:bold;
+  opacity:0;
+  transition:.4s;
+  font-size:13px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Song APIs</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+</div>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h3 id="sidebarName">Song Dev</h3>
+  </div>
+  <div class="menu">
+    <a href="dashboard.html">🏠 لوحة التحكم</a>
+    <a href="apis.html" class="active">🛠️ APIs</a>
+    <a href="owner.html">📞 تواصل مع المطور</a>
+    <a href="profile.html">👤 الملف الشخصي</a>
+  </div>
+</div>
+
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+<div class="container">
+  <h1 class="page-title">APIs</h1>
+  <p class="page-desc">جرب واجهات البرمجة الخاصة بنا بسهولة.</p>
+
+  <div class="api-card">
+    <h3>YT3 Downloader API</h3>
+    <p>قم بتحميل الفيديوهات من يوتيوب مباشرة.</p>
+
+    <div class="endpoint">
+      https://apis-song-elyoutuber-vip.netlify.app/.netlify/functions/yt3?url=
+    </div>
+
+    <input class="input" id="videoLink" placeholder="ضع رابط الفيديو هنا">
+    <button class="btn primary" onclick="tryAPI()">جرب API</button>
+    <button class="btn secondary" onclick="copyAPI()">نسخ الرابط</button>
+  </div>
+</div>
+
+<div id="toast" class="toast">تم النسخ</div>
+
+<script>
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+const API="https://apis-song-elyoutuber-vip.netlify.app/.netlify/functions/yt3?url=";
+
+function tryAPI(){
+  let video=document.getElementById("videoLink").value;
+  if(!video){
+    showToast("اكتب رابط الفيديو أولاً");
+    return;
+  }
+  window.open(API+encodeURIComponent(video),'_blank');
+}
+
+function copyAPI(){
+  navigator.clipboard.writeText(API);
+  showToast("تم نسخ الرابط");
+}
+
+function showToast(msg){
+  let toast=document.getElementById("toast");
+  toast.innerText=msg;
+  toast.style.opacity="1";
+  setTimeout(()=>{toast.style.opacity="0";},1500);
+}
+
+// تحميل صورة الملف الشخصي من التخزين المحلي
+let profileImage = localStorage.getItem("profileImage");
+if(profileImage){
+  document.getElementById("sidebarProfile").src = profileImage;
+}
+</script>
+
+</body>
+</html>

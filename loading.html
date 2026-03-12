@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Loading</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Consolas,monospace;
+}
+
+/* body */
+
+body{
+
+height:100vh;
+background:#05070d;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+color:#00ffaa;
+overflow:hidden;
+
+}
+
+/* matrix background */
+
+canvas{
+
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+}
+
+/* loader circle */
+
+.loader{
+
+width:70px;
+height:70px;
+
+border:4px solid rgba(0,255,170,0.15);
+border-top:4px solid #00ffaa;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+z-index:2;
+
+margin-bottom:25px;
+
+}
+
+@keyframes spin{
+
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+
+}
+
+/* loading text */
+
+.loading-text{
+
+z-index:2;
+font-size:20px;
+letter-spacing:2px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="loader"></div>
+
+<div class="loading-text" id="text"></div>
+
+<script>
+
+/* matrix effect */
+
+let canvas=document.getElementById("matrix")
+let ctx=canvas.getContext("2d")
+
+canvas.height=window.innerHeight
+canvas.width=window.innerWidth
+
+let letters="01"
+letters=letters.split("")
+
+let fontSize=16
+let columns=canvas.width/fontSize
+
+let drops=[]
+
+for(let x=0;x<columns;x++)
+drops[x]=1
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="#00ffaa"
+ctx.font=fontSize+"px monospace"
+
+for(let i=0;i<drops.length;i++){
+
+let text=letters[Math.floor(Math.random()*letters.length)]
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize)
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
+drops[i]=0
+
+drops[i]++
+
+}
+
+}
+
+setInterval(draw,35)
+
+/* typing loading text */
+
+let text="Loading Dashboard..."
+let i=0
+
+function typing(){
+
+if(i<text.length){
+
+document.getElementById("text").innerHTML+=text.charAt(i)
+i++
+
+setTimeout(typing,80)
+
+}
+
+}
+
+typing()
+
+/* redirect */
+
+setTimeout(function(){
+
+window.location.href="dashboard.html"
+
+},3000)
+
+</script>
+
+</body>
+</html>

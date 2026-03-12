@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile - Song APIs</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+background:#020617;
+color:white;
+overflow-x:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+background:rgba(2,6,23,.7);
+backdrop-filter:blur(10px);
+border-bottom:1px solid #1f2937;
+position:sticky;
+top:0;
+z-index:10;
+}
+
+.logo{
+font-size:18px;
+font-weight:bold;
+background:linear-gradient(90deg,#4f46e5,#22c55e);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.menu-btn{
+font-size:24px;
+cursor:pointer;
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+top:0;
+right:-270px;
+width:260px;
+height:100%;
+background:#020617;
+border-left:1px solid #1f2937;
+padding:25px;
+transition:.4s;
+z-index:20;
+overflow-y:auto;
+}
+
+.sidebar.active{
+right:0;
+}
+
+.sidebar-header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.sidebar-header img{
+width:65px;
+height:65px;
+border-radius:50%;
+border:2px solid #4f46e5;
+margin-bottom:10px;
+}
+
+.sidebar-header h3{
+font-size:16px;
+color:#9ca3af;
+}
+
+/* Menu Links */
+.menu a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:14px;
+margin-bottom:10px;
+border-radius:12px;
+text-decoration:none;
+color:#9ca3af;
+transition:.25s;
+}
+
+.menu a.active{
+background:linear-gradient(90deg,#4f46e5,#22c55e);
+color:white;
+}
+
+.menu a:hover{
+background:#0f172a;
+color:white;
+}
+
+/* Overlay */
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+opacity:0;
+visibility:hidden;
+transition:.3s;
+z-index:15;
+}
+
+.overlay.active{
+opacity:1;
+visibility:visible;
+}
+
+/* container */
+.container{
+padding:20px;
+max-width:420px;
+margin:auto;
+}
+
+/* card */
+.card{
+background:#0f172a;
+padding:25px;
+border-radius:16px;
+border:1px solid #1f2937;
+}
+
+/* profile image */
+.profile-img{
+width:110px;
+height:110px;
+border-radius:50%;
+border:3px solid #4f46e5;
+object-fit:cover;
+display:block;
+margin:auto;
+}
+
+/* inputs */
+.input{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#020617;
+border:1px solid #1f2937;
+border-radius:10px;
+color:white;
+}
+
+/* button */
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#6366f1,#22c55e);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.logout{
+background:#ef4444;
+}
+
+/* text */
+.info{
+margin-top:10px;
+color:#9ca3af;
+}
+
+hr{
+border:1px solid #1f2937;
+margin:15px 0;
+}
+
+h3{
+margin-top:10px;
+color:#cbd5f5;
+}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+<div class="logo">Song APIs</div>
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+<div class="sidebar-header">
+<img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
+<h3 id="sidebarName">User</h3>
+</div>
+
+<div class="menu">
+<a href="dashboard.html"><span>🏠</span> Dashboard</a>
+<a href="apis.html"><span>⚡</span> APIs</a>
+<a href="owner.html"><span>👨‍💻</span> Contact Developer</a>
+<a href="profile.html" class="active"><span>⚙</span> Profile</a>
+</div>
+
+</div>
+
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+<!-- CONTAINER -->
+<div class="container">
+
+<div class="card">
+
+<img id="profileImage" class="profile-img" src="https://i.imgur.com/2DhmtJ4.png">
+<input type="file" class="input" onchange="uploadImage(event)">
+
+<div class="info">📧 Email: <span id="email"></span></div>
+<div class="info">🔑 API Key: <span id="apikey"></span></div>
+
+<hr>
+
+<h3>Change Email</h3>
+<input id="newEmail" class="input" placeholder="New Email">
+<button onclick="changeEmail()">Update Email</button>
+
+<hr>
+
+<h3>Change Password</h3>
+<input id="newPass" type="password" class="input" placeholder="New Password">
+<button onclick="changePassword()">Update Password</button>
+
+<button class="logout" onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+const supabaseClient = supabase.createClient(
+"https://rcxjwetrmtwxkdqdurfw.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
+)
+
+/* SIDEBAR TOGGLE */
+function toggleMenu(){
+document.getElementById("sidebar").classList.toggle("active")
+document.getElementById("overlay").classList.toggle("active")
+}
+
+/* load profile */
+loadProfile()
+async function loadProfile(){
+let { data:{user} } = await supabaseClient.auth.getUser()
+if(!user){ window.location="login.html"; return }
+
+let { data } = await supabaseClient
+.from("users")
+.select("*")
+.eq("email", user.email)
+.single()
+
+document.getElementById("email").innerText = data.email
+document.getElementById("apikey").innerText = data.apikey
+
+if(data.image){
+document.getElementById("profileImage").src = data.image
+document.getElementById("sidebarProfile").src = data.image
+}
+}
+
+/* change email */
+async function changeEmail(){
+let newEmail = document.getElementById("newEmail").value
+let { data:{user} } = await supabaseClient.auth.getUser()
+
+await supabaseClient.auth.updateUser({email:newEmail})
+await supabaseClient.from("users").update({email:newEmail}).eq("email",user.email)
+alert("Email updated")
+}
+
+/* change password */
+async function changePassword(){
+let newPass = document.getElementById("newPass").value
+await supabaseClient.auth.updateUser({password:newPass})
+alert("Password updated")
+}
+
+/* upload image */
+function uploadImage(event){
+let reader = new FileReader()
+reader.onload = async function(){
+let image = reader.result
+let { data:{user} } = await supabaseClient.auth.getUser()
+await supabaseClient.from("users").update({image:image}).eq("email",user.email)
+document.getElementById("profileImage").src = image
+document.getElementById("sidebarProfile").src = image
+}
+reader.readAsDataURL(event.target.files[0])
+}
+
+/* logout */
+async function logout(){
+await supabaseClient.auth.signOut()
+window.location="login.html"
+}
+</script>
+</body>
+</html>
