@@ -1,19 +1,26 @@
-export default async function handler(req, res) {
+export async function handler(event) {
 
-const { url } = req.query
+const params = event.queryStringParameters
+const url = params.url
 
 if (!url) {
-return res.status(400).json({
+return {
+statusCode: 400,
+body: JSON.stringify({
 success: false,
 message: "حط رابط يوتيوب"
 })
 }
+}
 
 const api = `https://obito-mr-apis.vercel.app/api/download/youtube?url=${encodeURIComponent(url)}`
 
-const response = await fetch(api)
-const data = await response.json()
+const res = await fetch(api)
+const data = await res.json()
 
-res.status(200).json(data)
+return {
+statusCode: 200,
+body: JSON.stringify(data)
+}
 
 }
