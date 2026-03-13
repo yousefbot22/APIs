@@ -1,0 +1,253 @@
+/* ===== General ===== */
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f4f7ff;
+}
+
+/* ===== Sidebar ===== */
+
+.sidebar{
+width:230px;
+background:white;
+height:100vh;
+box-shadow:0 0 10px rgba(0,0,0,0.05);
+}
+
+.profile-box{
+text-align:center;
+padding:20px;
+border-bottom:1px solid #eee;
+}
+
+.profile-img{
+width:80px;
+height:80px;
+border-radius:50%;
+border:3px solid #4f6cff;
+object-fit:cover;
+margin-bottom:10px;
+}
+
+.email{
+font-size:14px;
+color:#555;
+}
+
+/* ===== Menu ===== */
+
+.menu{
+list-style:none;
+padding:0;
+margin:0;
+}
+
+.menu li{
+padding:15px 25px;
+cursor:pointer;
+border-bottom:1px solid #eee;
+transition:0.3s;
+}
+
+.menu li:hover{
+background:#f0f3ff;
+padding-left:30px;
+}
+
+/* ===== Main ===== */
+
+.main{
+flex:1;
+padding:35px;
+}
+
+/* ===== Cards ===== */
+
+.card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+margin-bottom:25px;
+transition:0.3s;
+animation:fadeUp 1s ease;
+}
+
+.card:hover{
+transform:translateY(-6px);
+box-shadow:0 15px 35px rgba(0,0,0,0.1);
+}
+
+/* ===== Buttons ===== */
+
+button{
+padding:10px 20px;
+border:none;
+background:#4f6cff;
+color:white;
+border-radius:8px;
+cursor:pointer;
+margin-top:10px;
+transition:0.2s;
+}
+
+button:hover{
+opacity:0.9;
+transform:scale(1.05);
+}
+
+/* ===== Auth Pages ===== */
+
+.auth-body{
+background:linear-gradient(135deg,#e8f0ff,#ffffff);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.auth-body .card{
+width:330px;
+padding:40px;
+border-radius:20px;
+text-align:center;
+}
+
+.card input{
+width:100%;
+padding:12px;
+margin-top:12px;
+border-radius:10px;
+border:1px solid #ddd;
+}
+
+.auth-switch{
+margin-top:15px;
+}
+
+.auth-switch a{
+color:#6ea8ff;
+text-decoration:none;
+}
+
+/* ===== Loading Page ===== */
+
+.loading-body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+}
+
+.loader{
+width:70px;
+height:70px;
+border:7px solid #ddd;
+border-top:7px solid #4f6cff;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:25px;
+}
+
+.loading-text{
+font-size:22px;
+color:#333;
+animation:fadeMove 1.5s ease-in-out infinite;
+}
+
+/* ===== Dashboard ===== */
+
+.dashboard-body{
+display:flex;
+}
+
+.dashboard-title{
+margin-top:0;
+animation:fadeUp 1s ease;
+}
+
+.dashboard-desc{
+color:#555;
+max-width:600px;
+line-height:1.6;
+margin-bottom:30px;
+animation:fadeUp 1.3s ease;
+}
+
+.apikey-text{
+font-family:monospace;
+background:#f0f3ff;
+padding:10px;
+border-radius:8px;
+display:inline-block;
+}
+
+/* ===== APIs ===== */
+
+.api-card{
+background:white;
+padding:25px;
+border-radius:15px;
+margin-bottom:25px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+transition:0.3s;
+animation:fadeUp 1s ease;
+}
+
+.api-card:hover{
+transform:translateY(-6px);
+box-shadow:0 15px 35px rgba(0,0,0,0.1);
+}
+
+.endpoint{
+background:#111;
+color:#00ff9c;
+padding:12px;
+border-radius:8px;
+font-family:monospace;
+margin-top:10px;
+display:inline-block;
+}
+
+/* ===== Profile ===== */
+
+.profile-card{
+text-align:center;
+animation:fadeUp 1s ease;
+}
+
+.profile-large{
+width:120px;
+height:120px;
+margin-bottom:15px;
+}
+
+.upload-input{
+margin:10px 0 15px 0;
+}
+
+.info{
+margin:12px 0;
+font-size:17px;
+color:#333;
+}
+
+/* ===== Animations ===== */
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+@keyframes fadeMove{
+0%{opacity:0.4;transform:translateY(0);}
+50%{opacity:1;transform:translateY(-6px);}
+100%{opacity:0.4;transform:translateY(0);}
+}
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(15px);}
+to{opacity:1;transform:translateY(0);}
+}
