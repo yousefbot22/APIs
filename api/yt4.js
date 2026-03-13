@@ -1,7 +1,7 @@
 import fetch from "node-fetch"; // لو في Node.js القديم
 
 export default async function handler(req, res) {
-  const { url } = req.query;
+  let { url } = req.query;
 
   if (!url) {
     return res.status(400).json({
@@ -9,6 +9,9 @@ export default async function handler(req, res) {
       message: "ضع رابط يوتيوب"
     });
   }
+
+  // تنظيف الرابط: إزالة كل شيء بعد معرف الفيديو
+  url = url.split(/[?&]/)[0];
 
   try {
     const api = `https://obito-mr-apis.vercel.app/api/download/youtube?url=${encodeURIComponent(url)}`;
