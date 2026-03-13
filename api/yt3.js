@@ -5,15 +5,26 @@ const { url } = req.query
 if (!url) {
 return res.status(400).json({
 success: false,
-message: "حط رابط يوتيوب"
+message: "ضع رابط يوتيوب"
 })
 }
+
+try {
 
 const api = `https://obito-mr-apis.vercel.app/api/download/youtube?url=${encodeURIComponent(url)}`
 
 const response = await fetch(api)
 const data = await response.json()
 
-res.status(200).json(data)
+return res.status(200).json(data)
+
+} catch (err) {
+
+return res.status(500).json({
+success: false,
+error: err.message
+})
+
+}
 
 }
