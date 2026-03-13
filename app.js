@@ -57,7 +57,7 @@ window.location.href="apis.html";
 /* ??????? */
 
 function contact(){
-window.open("https://t.me/Songmd9");
+window.open("https://t.me/MNYAAMK");
 }
 
 /* ????? ?????? */
