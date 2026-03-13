@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Ultra Glass</title>
+<title>Ultra Glass Login</title>
 
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,Arial; }
@@ -19,7 +19,7 @@ body{
   position:relative;
 }
 
-/* Hacker Grid Background */
+/* Background Grid */
 body::before{
   content:"";
   position:absolute;
@@ -36,21 +36,21 @@ body::before{
   100%{transform:translate(-250px,-250px);}
 }
 
-/* Neon Glow Lights */
+/* Glow Lights */
 .light{
   position:absolute;
-  width:500px;
-  height:500px;
+  width:600px;
+  height:600px;
   border-radius:50%;
   filter:blur(180px);
   opacity:0.25;
   animation: glowPulse 6s ease-in-out infinite;
 }
-.light1{ background:#00ffaa; top:-120px; left:-120px; }
-.light2{ background:#4f7cff; bottom:-140px; right:-140px; }
+.light1{ background:#00ffaa; top:-150px; left:-150px; }
+.light2{ background:#4f7cff; bottom:-160px; right:-160px; }
 @keyframes glowPulse{
   0%,100%{opacity:0.2; transform:scale(1);}
-  50%{opacity:0.35; transform:scale(1.1);}
+  50%{opacity:0.35; transform:scale(1.15);}
 }
 
 /* Glass Card */
@@ -58,46 +58,47 @@ body::before{
   position:relative;
   z-index:2;
   width:100%;
-  max-width:400px;
-  padding:50px 40px;
-  border-radius:20px;
-  background: rgba(255,255,255,0.03);
-  backdrop-filter: blur(25px) saturate(200%);
-  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  max-width:420px;
+  padding:60px 40px;
+  border-radius:25px;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(30px) saturate(220%);
+  -webkit-backdrop-filter: blur(30px) saturate(220%);
   border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 0 40px rgba(0,255,170,0.2);
+  box-shadow: 0 0 50px rgba(0,255,170,0.3);
   text-align:center;
-  animation: neonPulse 2.5s infinite alternate;
+  animation: cardGlow 2.5s infinite alternate;
   transition:0.3s ease;
 }
 .card:hover{
-  box-shadow: 0 0 60px #00ffaa, 0 0 120px #00c3ff;
-  transform: translateY(-5px);
+  box-shadow: 0 0 80px #00ffaa, 0 0 160px #00c3ff;
+  transform: translateY(-6px);
 }
-@keyframes neonPulse{
-  0%{box-shadow:0 0 20px #00ffaa,0 0 40px #00c3ff;}
-  100%{box-shadow:0 0 50px #00ffaa,0 0 100px #00c3ff;}
+@keyframes cardGlow{
+  0%{box-shadow:0 0 30px #00ffaa,0 0 60px #00c3ff;}
+  100%{box-shadow:0 0 60px #00ffaa,0 0 120px #00c3ff;}
 }
 
-h1{ margin-bottom:10px; font-size:28px; letter-spacing:1px;}
-.subtitle{ opacity:0.7; margin-bottom:30px; font-size:15px; }
+h1{ margin-bottom:12px; font-size:30px; letter-spacing:1px;}
+.subtitle{ opacity:0.7; margin-bottom:35px; font-size:16px; }
 
 /* Input Fields */
 .input-box{ position:relative; margin-top:20px; }
 .input-box input{
   width:100%;
-  padding:15px;
-  border-radius:12px;
+  padding:16px;
+  border-radius:15px;
   border:1px solid rgba(255,255,255,0.2);
   background: rgba(255,255,255,0.02);
   color:white;
   outline:none;
   transition:0.3s ease;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(15px);
+  font-size:15px;
 }
 .input-box input:focus{
   border:1px solid #00ffaa;
-  box-shadow:0 0 15px #00ffaa;
+  box-shadow:0 0 20px #00ffaa;
 }
 .show{
   position:absolute;
@@ -105,19 +106,22 @@ h1{ margin-bottom:10px; font-size:28px; letter-spacing:1px;}
   top:50%;
   transform:translateY(-50%);
   cursor:pointer;
-  font-size:13px;
+  font-size:14px;
   color:#00ffaa;
+  user-select:none;
 }
 
-/* Button */
+/* Button with Ripple */
 button{
+  position:relative;
+  overflow:hidden;
   width:100%;
-  padding:15px;
-  margin-top:25px;
+  padding:16px;
+  margin-top:28px;
   border:none;
-  border-radius:12px;
+  border-radius:15px;
   background: linear-gradient(135deg, rgba(0,255,170,0.3), rgba(0,195,255,0.3));
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(15px);
   color:#fff;
   font-size:16px;
   font-weight:bold;
@@ -126,19 +130,37 @@ button{
   animation: buttonGlow 2s infinite alternate;
 }
 button:hover{
-  box-shadow:0 0 25px #00ffaa, 0 0 50px #00c3ff;
-  transform:translateY(-2px);
+  box-shadow:0 0 30px #00ffaa, 0 0 60px #00c3ff;
+  transform:translateY(-3px);
 }
 @keyframes buttonGlow{
-  0%{box-shadow:0 0 10px #00ffaa,0 0 20px #00c3ff;}
-  100%{box-shadow:0 0 20px #00ffaa,0 0 40px #00c3ff;}
+  0%{box-shadow:0 0 15px #00ffaa,0 0 30px #00c3ff;}
+  100%{box-shadow:0 0 30px #00ffaa,0 0 60px #00c3ff;}
+}
+
+/* Ripple Effect */
+button:after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  background: rgba(255,255,255,0.2);
+  display:block;
+  border-radius:50%;
+  transform: scale(0);
+  opacity:0;
+  pointer-events:none;
+  animation: ripple 0.6s linear;
+}
+@keyframes ripple{
+  to { transform: scale(4); opacity:0; }
 }
 
 /* Messages */
 #msg{
   margin-top:20px;
-  padding:12px;
-  border-radius:10px;
+  padding:14px;
+  border-radius:12px;
   font-size:14px;
   display:none;
 }
@@ -146,12 +168,11 @@ button:hover{
 .msg-success{ background:#00ffaa33; color:#6bffd6; }
 
 /* Switch */
-.switch{ margin-top:22px; font-size:14px; }
+.switch{ margin-top:25px; font-size:14px; }
 .switch a{ color:#00ffaa; text-decoration:none; }
 
 </style>
 </head>
-
 <body>
 
 <div class="light light1"></div>
