@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Song APIs</title>
+<title>TOJI APIs</title>
 <style>
 *{
   margin:0;
@@ -251,14 +251,14 @@ body::after{
 <body>
 
 <div class="topbar">
-  <div class="logo">Song APIs</div>
+  <div class="logo">TOJI APIs</div>
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
-    <h3 id="sidebarName">Song Dev</h3>
+    <h3 id="sidebarName">TOJI Dev</h3>
   </div>
   <div class="menu">
     <a href="dashboard.html">🏠 لوحة التحكم</a>
@@ -279,7 +279,7 @@ body::after{
     <p>قم بتحميل الفيديوهات من يوتيوب مباشرة.</p>
 
     <div class="endpoint">
-      https://apis-song-elyoutuber-vip.netlify.app/.netlify/functions/yt3?url=
+      https://toji-eltektoker.vercel.app/netlify/functions/yt3?url=
     </div>
 
     <input class="input" id="videoLink" placeholder="ضع رابط الفيديو هنا">
@@ -296,7 +296,7 @@ function toggleMenu(){
   document.getElementById("overlay").classList.toggle("active");
 }
 
-const API="https://apis-song-elyoutuber-vip.netlify.app/.netlify/functions/yt3?url=";
+const API="https://toji-eltektoker.vercel.app/netlify/functions/yt3?url=";
 
 function tryAPI(){
   let video=document.getElementById("videoLink").value;
