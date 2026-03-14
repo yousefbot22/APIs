@@ -3,7 +3,7 @@ export default async function handler(req, res) {
   const { action, session, signature, step, answer } = req.query;
 
   try {
-    // 1️⃣ بدء اللعبة
+    //  بدء اللعبة
     if (action === "start") {
       const api = `https://obito-mr-apis.vercel.app/api/game/akinator_start?lang=ar`;
       const response = await fetch(api);
