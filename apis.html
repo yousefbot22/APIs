@@ -4,415 +4,144 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TOJI APIs</title>
-
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Segoe UI,Tahoma,sans-serif;
-}
-
-body{
-background:#020617;
-color:white;
-overflow-x:hidden;
-}
-
-/* خلفية */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma,sans-serif;}
+body{background:#010214;color:white;overflow-x:hidden;}
 body::before,body::after{
-content:"";
-position:fixed;
-width:400px;
-height:400px;
-filter:blur(70px);
-opacity:.4;
-pointer-events:none;
+  content:"";position:fixed;width:400px;height:400px;filter:blur(80px);opacity:.3;pointer-events:none;
 }
+body::before{top:-150px;left:-150px;background:radial-gradient(circle,#4f46e5,#010214);}
+body::after{bottom:-150px;right:-150px;background:radial-gradient(circle,#22c55e,#010214);}
 
-body::before{
-top:-150px;
-left:-150px;
-background:radial-gradient(circle,#4f46e5,#020617);
-}
+/* Topbar */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(2,6,23,.8);backdrop-filter:blur(8px);border-bottom:1px solid #1f2937;position:fixed;width:100%;top:0;z-index:15;}
+.logo{font-size:20px;font-weight:bold;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;}
+.menu-btn{font-size:24px;cursor:pointer;}
 
-body::after{
-bottom:-150px;
-right:-150px;
-background:radial-gradient(circle,#22c55e,#020617);
-}
+/* Sidebar */
+.sidebar{position:fixed;top:0;right:-260px;width:220px;height:100%;background:#010214;border-left:1px solid #1f2937;padding:20px;transition:.4s;z-index:10;}
+.sidebar.active{right:0;}
+.sidebar-header{text-align:center;margin-bottom:20px;}
+.sidebar-header img{width:60px;height:60px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:8px;}
+.sidebar-header h3{font-size:14px;color:#9ca3af;}
+.menu a{display:flex;align-items:center;gap:8px;padding:10px;margin-bottom:8px;border-radius:10px;text-decoration:none;color:#9ca3af;transition:.25s;font-size:13px;direction:rtl;}
+.menu a.active{background:linear-gradient(90deg,#4f46e5,#22c55e);color:white;}
+.menu a:hover{background:#0f172a;color:white;}
 
-/* TOPBAR */
+/* Overlay */
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.3s;z-index:5;}
+.overlay.active{opacity:1;visibility:visible;}
 
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px 16px;
-background:rgba(2,6,23,.7);
-backdrop-filter:blur(6px);
-border-bottom:1px solid #1f2937;
-position:fixed;
-width:100%;
-top:0;
-z-index:15;
-}
+/* Page */
+.container{padding:80px 20px 20px 20px;max-width:900px;margin:auto;}
+.page-title{font-size:28px;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;margin-bottom:8px;text-align:right;}
+.page-desc{color:#9ca3af;margin-bottom:20px;font-size:14px;text-align:right;}
 
-.logo{
-font-size:18px;
-font-weight:bold;
-background:linear-gradient(90deg,#4f46e5,#22c55e);
--webkit-background-clip:text;
-color:transparent;
-}
+/* Grid */
+.api-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
 
-.menu-btn{
-font-size:24px;
-cursor:pointer;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-position:fixed;
-top:0;
-right:-260px;
-width:220px;
-height:100%;
-background:#020617;
-border-left:1px solid #1f2937;
-padding:20px;
-transition:.4s;
-z-index:10;
-}
-
-.sidebar.active{
-right:0;
-}
-
-.sidebar-header{
-text-align:center;
-margin-bottom:20px;
-}
-
-.sidebar-header img{
-width:60px;
-height:60px;
-border-radius:50%;
-border:2px solid #4f46e5;
-margin-bottom:8px;
-}
-
-.sidebar-header h3{
-font-size:14px;
-color:#9ca3af;
-}
-
-.menu a{
-display:flex;
-align-items:center;
-gap:8px;
-padding:10px;
-margin-bottom:8px;
-border-radius:10px;
-text-decoration:none;
-color:#9ca3af;
-transition:.25s;
-font-size:13px;
-direction:rtl;
-}
-
-.menu a.active{
-background:linear-gradient(90deg,#4f46e5,#22c55e);
-color:white;
-}
-
-.menu a:hover{
-background:#0f172a;
-color:white;
-}
-
-/* OVERLAY */
-
-.overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,.4);
-backdrop-filter:blur(2px);
-opacity:0;
-visibility:hidden;
-transition:.3s;
-z-index:5;
-}
-
-.overlay.active{
-opacity:1;
-visibility:visible;
-}
-
-/* PAGE */
-
-.container{
-padding:80px 20px 20px 20px;
-max-width:900px;
-margin:auto;
-}
-
-.page-title{
-font-size:24px;
-background:linear-gradient(90deg,#4f46e5,#22c55e);
--webkit-background-clip:text;
-color:transparent;
-margin-bottom:6px;
-text-align:right;
-}
-
-.page-desc{
-color:#9ca3af;
-margin-bottom:20px;
-font-size:13px;
-text-align:right;
-}
-
-/* GRID */
-
-.api-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-gap:18px;
-}
-
-/* CARD */
-
-.api-card{
-background:linear-gradient(145deg,#0f172a,#020617);
-border:1px solid #1f2937;
-border-radius:16px;
-padding:18px;
-transition:.35s;
-position:relative;
-overflow:hidden;
-text-align:right;
-}
-
-.api-card:hover{
-transform:translateY(-8px) scale(1.02);
-border:1px solid #6366f1;
-box-shadow:0 10px 40px rgba(99,102,241,.35);
-}
-
-.api-card::before{
-content:"";
-position:absolute;
-width:150px;
-height:150px;
-background:radial-gradient(circle,#6366f1,transparent);
-top:-40px;
-right:-40px;
-opacity:.15;
-}
-
-/* ENDPOINT */
-
-.endpoint{
-background:#111827;
-padding:8px;
-border-radius:6px;
-font-size:12px;
-word-break:break-all;
-margin-bottom:10px;
-}
-
-/* INPUT */
-
-.input{
-width:100%;
-padding:10px;
-border-radius:6px;
-border:1px solid #1f2937;
-background:#020617;
-color:white;
-margin-bottom:10px;
-font-size:13px;
-text-align:right;
-}
-
-.input:focus{
-outline:none;
-border:1px solid #6366f1;
-box-shadow:0 0 10px rgba(99,102,241,.4);
-}
-
-/* BUTTONS */
-
-.btn{
-padding:8px 12px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin-right:5px;
-transition:.3s;
-font-size:13px;
-}
-
-.primary{
-background:linear-gradient(90deg,#6366f1,#22c55e);
-color:white;
-}
-
-.secondary{
-background:#020617;
-border:1px solid #1f2937;
-color:#9ca3af;
-}
-
-.btn:hover{
-transform:scale(1.08);
-box-shadow:0 0 12px rgba(99,102,241,.5);
-}
-
-/* TOAST */
-
-.toast{
-position:fixed;
-bottom:15px;
-left:50%;
-transform:translateX(-50%);
-background:#6366f1;
-padding:8px 16px;
-border-radius:10px;
-color:white;
-font-weight:bold;
-opacity:0;
-transition:.4s;
-font-size:13px;
-}
-
+/* Card */
+.api-card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:16px;padding:18px;transition:.35s;position:relative;overflow:hidden;text-align:right;}
+.api-card:hover{transform:translateY(-6px) scale(1.02);border:1px solid #6366f1;box-shadow:0 10px 40px rgba(99,102,241,.3);}
+.api-card::before{content:"";position:absolute;width:150px;height:150px;background:radial-gradient(circle,#6366f1,transparent);top:-40px;right:-40px;opacity:.15;}
+.endpoint{background:#111827;padding:8px;border-radius:6px;font-size:12px;word-break:break-all;margin-bottom:10px;}
+.input{width:100%;padding:10px;border-radius:6px;border:1px solid #1f2937;background:#010214;color:white;margin-bottom:10px;font-size:13px;text-align:right;}
+.input:focus{outline:none;border:1px solid #6366f1;box-shadow:0 0 10px rgba(99,102,241,.4);}
+.btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;margin-right:5px;transition:.3s;font-size:13px;}
+.primary{background:linear-gradient(90deg,#6366f1,#22c55e);color:white;}
+.secondary{background:#010214;border:1px solid #1f2937;color:#9ca3af;}
+.btn:hover{transform:scale(1.08);box-shadow:0 0 12px rgba(99,102,241,.5);}
+.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#6366f1;padding:8px 16px;border-radius:10px;color:white;font-weight:bold;opacity:0;transition:.4s;font-size:13px;}
 </style>
 </head>
-
 <body>
 
 <div class="topbar">
-<div class="logo">TOJI APIs</div>
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
+  <div class="logo">TOJI APIs</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
 <div class="sidebar" id="sidebar">
-<div class="sidebar-header">
-<img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
-<h3 id="sidebarName">TOJI Dev</h3>
+  <div class="sidebar-header">
+    <img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h3 id="sidebarName">TOJI Dev</h3>
+  </div>
+  <div class="menu">
+    <a href="dashboard.html">🏠 لوحة التحكم</a>
+    <a href="apis.html" class="active">🛠️ APIs</a>
+    <a href="owner.html">📞 تواصل مع المطور</a>
+    <a href="profile.html">👤 الملف الشخصي</a>
+  </div>
 </div>
-
-<div class="menu">
-<a href="dashboard.html">🏠 لوحة التحكم</a>
-<a href="apis.html" class="active">🛠️ APIs</a>
-<a href="owner.html">📞 تواصل مع المطور</a>
-<a href="profile.html">👤 الملف الشخصي</a>
-</div>
-</div>
-
 <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
 <div class="container">
+  <h1 class="page-title">APIs</h1>
+  <p class="page-desc">جرب واجهات البرمجة الخاصة بنا بسهولة.</p>
 
-<h1 class="page-title">APIs</h1>
-<p class="page-desc">جرب واجهات البرمجة الخاصة بنا بسهولة.</p>
-
-<div class="api-grid">
-
-<div class="api-card">
-<h3>YT3 Downloader</h3>
-<p>تحميل الصوت من يوتيوب</p>
-
-<div class="endpoint">
-https://toji-eltiktoker.vercel.app/api/yt3?url=
-</div>
-
-<input class="input" id="videoLink" placeholder="ضع رابط الفيديو">
-
-<button class="btn primary" onclick="tryAPI()">جرب</button>
-<button class="btn secondary" onclick="copyAPI()">نسخ</button>
-</div>
-
-<div class="api-card">
-<h3>YouTube 360p</h3>
-<p>تحميل فيديو 360p</p>
-
-<div class="endpoint">
-https://toji-eltiktoker.vercel.app/api/yt4?url=
-</div>
-
-<input class="input" placeholder="رابط الفيديو">
-
-<button class="btn primary">جرب</button>
-<button class="btn secondary">نسخ</button>
-</div>
-
-<div class="api-card">
-<h3>akinator</h3>
-<p>العب مع Akinator الذكي الذي يخمن الشخصية التي تفكر فيها</p>
-
-<div class="endpoint">
-https://toji-eltiktoker.vercel.app/api/akinator?action=start
-</div>
-
-<input class="input" placeholder="https://toji-eltiktoker.vercel.app/api/akinator?action=start">
-
-<button class="btn primary">جرب</button>
-<button class="btn secondary">نسخ</button>
-</div>
-
-</div>
-
+  <div class="api-grid">
+    <!-- YT3 -->
+    <div class="api-card">
+      <h3>YT3 Downloader</h3>
+      <p>تحميل الصوت من يوتيوب</p>
+      <div class="endpoint" id="endpoint-yt3">https://toji-eltiktoker.vercel.app/api/yt3?url=</div>
+      <input class="input" id="input-yt3" placeholder="ضع رابط الفيديو">
+      <button class="btn primary" onclick="tryAPI('yt3')">جرب</button>
+      <button class="btn secondary" onclick="copyAPI('yt3')">نسخ</button>
+    </div>
+    <!-- YT4 -->
+    <div class="api-card">
+      <h3>YouTube 360p</h3>
+      <p>تحميل فيديو 360p</p>
+      <div class="endpoint" id="endpoint-yt4">https://toji-eltiktoker.vercel.app/api/yt4?url=</div>
+      <input class="input" id="input-yt4" placeholder="ضع رابط الفيديو">
+      <button class="btn primary" onclick="tryAPI('yt4')">جرب</button>
+      <button class="btn secondary" onclick="copyAPI('yt4')">نسخ</button>
+    </div>
+    <!-- Akinator -->
+    <div class="api-card">
+      <h3>Akinator</h3>
+      <p>العب مع Akinator الذكي</p>
+      <div class="endpoint" id="endpoint-akinator">https://toji-eltiktoker.vercel.app/api/akinator?action=start</div>
+      <input class="input" id="input-akinator" placeholder="ابدأ اللعبة">
+      <button class="btn primary" onclick="tryAPI('akinator')">جرب</button>
+      <button class="btn secondary" onclick="copyAPI('akinator')">نسخ</button>
+    </div>
+  </div>
 </div>
 
 <div id="toast" class="toast">تم النسخ</div>
 
 <script>
-
 function toggleMenu(){
-document.getElementById("sidebar").classList.toggle("active");
-document.getElementById("overlay").classList.toggle("active");
+  document.getElementById("sidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
 }
 
-const API="https://toji-eltiktoker.vercel.app/api/yt3?url=";
-
-function tryAPI(){
-let video=document.getElementById("videoLink").value;
-
-if(!video){
-showToast("اكتب رابط الفيديو");
-return;
+function tryAPI(apiName){
+  const endpoint = document.getElementById("endpoint-" + apiName).innerText;
+  const input = document.getElementById("input-" + apiName).value || "";
+  window.open(endpoint + encodeURIComponent(input), "_blank");
 }
 
-window.open(API+encodeURIComponent(video),'_blank');
-}
-
-function copyAPI(){
-navigator.clipboard.writeText(API);
-showToast("تم نسخ الرابط");
+function copyAPI(apiName){
+  const endpoint = document.getElementById("endpoint-" + apiName).innerText;
+  navigator.clipboard.writeText(endpoint);
+  showToast("تم النسخ");
 }
 
 function showToast(msg){
-let toast=document.getElementById("toast");
-toast.innerText=msg;
-toast.style.opacity="1";
-
-setTimeout(()=>{
-toast.style.opacity="0";
-},1500);
+  const toast=document.getElementById("toast");
+  toast.innerText=msg;
+  toast.style.opacity="1";
+  setTimeout(()=>{toast.style.opacity="0";},1500);
 }
 
+// profile
 let profileImage = localStorage.getItem("profileImage");
 if(profileImage){
-document.getElementById("sidebarProfile").src = profileImage;
+  document.getElementById("sidebarProfile").src = profileImage;
 }
-
 </script>
 
 </body>
