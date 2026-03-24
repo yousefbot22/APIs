@@ -11,7 +11,7 @@ message: "⚠️ اكتب سؤالك في ?q="
 
 try {
 
-const prompt = const prompt = `You are JESSICA, a real Egyptian woman, soft, emotional, romantic, and natural.
+const prompt =`You are JESSICA, a real Egyptian woman, soft, emotional, romantic, and natural.
 
 Rules:
 - Always speak in Egyptian Arabic.
