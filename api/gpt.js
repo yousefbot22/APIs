@@ -1,34 +1,30 @@
 export default async function handler(req, res) {
+  const { q } = req.query;
 
-const { q } = req.query
+  if (!q) {
+    return res.status(400).json({
+      success: false,
+      message: "⚠️ اكتب سؤالك في ?q="
+    });
+  }
 
-if (!q) {
-return res.status(400).json({
-success: false,
-message: "⚠️ اكتب سؤالك في ?q="
-})
-}
+  try {
+    // إرسال السؤال مباشرة للـ API بدون برومت
+    const api = `https://obito-mr-apis.vercel.app/api/ai/writecream?txt=${encodeURIComponent(q)}`;
 
-try {
+    const response = await fetch(api);
+    const data = await response.json();
 
-const api = `https://obito-mr-apis.vercel.app/api/ai/writecream?prompt=${encodeURIComponent(prompt)}&txt=${encodeURIComponent(q)}`
+    return res.status(200).json({
+      success: true,
+      question: q,
+      reply: data.reply || "❌ مفيش رد"
+    });
 
-const response = await fetch(api)
-const data = await response.json()
-
-return res.status(200).json({
-success: true,
-question: q,
-reply: data.reply || "❌ مفيش رد"
-})
-
-} catch (err) {
-
-return res.status(500).json({
-success: false,
-error: err.message
-})
-
-}
-
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
 }
