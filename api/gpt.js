@@ -9,8 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    // إرسال السؤال مباشرة للـ API بدون برومت
-    const api = `https://obito-mr-apis.vercel.app/api/ai/writecream?prompt?q=${encodeURIComponent(q)}`;
+    const api = `https://obito-mr-apis.vercel.app/api/ai/writecream?prompt=${encodeURIComponent("JESSICA شخصية مصرية لطيفة ورومانسية")}&txt=${encodeURIComponent(q)}`;
 
     const response = await fetch(api);
     const data = await response.json();
