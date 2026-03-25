@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const api = `https://obito-mr-apis.vercel.app/api/ai/writecream?prompt=${encodeURIComponent("JESSICA شخصية مصرية لطيفة ورومانسية")}&txt=${encodeURIComponent(q)}`;
+    const api = `https://www.emam-api.web.id/home/sections/Ai/api/Gpt/turbo?q=${encodeURIComponent(q)}`;
 
     const response = await fetch(api);
     const data = await response.json();
@@ -17,7 +17,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       question: q,
-      reply: data.reply || "❌ مفيش رد"
+      reply: data.message || "❌ مفيش رد",
+      author: "TOJI" // 👈 غيرناها هنا
     });
 
   } catch (err) {
