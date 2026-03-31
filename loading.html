@@ -14,199 +14,167 @@
 
 body {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0c1a 0%, #010214 100%);
+  background: radial-gradient(circle at 20% 50%, #0f172a, #020617);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: hidden;
 }
 
-/* Animated Background Circles */
-.circle {
+/* Floating Orbs */
+.orb {
   position: absolute;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(79,70,229,0.3), transparent);
-  animation: float 8s ease-in-out infinite;
+  filter: blur(60px);
+  opacity: 0.4;
+  animation: floatOrb 6s ease-in-out infinite;
 }
 
-.circle1 { width: 400px; height: 400px; top: -150px; left: -150px; }
-.circle2 { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: -3s; }
-.circle3 { width: 250px; height: 250px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-duration: 5s; }
+.orb1 { width: 300px; height: 300px; background: #4f46e5; top: 20%; left: 10%; }
+.orb2 { width: 400px; height: 400px; background: #22c55e; bottom: 10%; right: 5%; animation-delay: -2s; }
+.orb3 { width: 200px; height: 200px; background: #06b6d4; top: 60%; left: 70%; animation-delay: -4s; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
-  50% { transform: translateY(-30px) scale(1.1); opacity: 0.5; }
+@keyframes floatOrb {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-40px) translateX(20px); }
 }
 
-/* Main Container */
-.loader-container {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  padding: 40px;
-  background: rgba(15, 23, 42, 0.4);
+/* Main Card */
+.card {
+  background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(20px);
-  border-radius: 40px;
-  border: 1px solid rgba(79, 70, 229, 0.3);
-  animation: fadeInScale 0.5s ease;
+  border-radius: 32px;
+  padding: 50px 60px;
+  text-align: center;
+  border: 1px solid rgba(79, 70, 229, 0.4);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+  z-index: 10;
+  animation: slideUp 0.6s ease;
 }
 
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Animated Logo */
-.logo {
-  font-size: 48px;
+/* Dots Loader */
+.dots-loader {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #4f46e5, #22c55e);
+  border-radius: 50%;
+  animation: bounce 0.6s ease-in-out infinite;
+}
+
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.1s; }
+.dot:nth-child(3) { animation-delay: 0.2s; }
+.dot:nth-child(4) { animation-delay: 0.3s; }
+.dot:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.2); }
+}
+
+/* Wave Text */
+.wave-text {
+  font-size: 18px;
+  color: #cbd5e1;
+  margin-top: 20px;
+}
+
+.wave-text span {
+  display: inline-block;
+  animation: wave 1s ease-in-out infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Loading Message */
+.message {
+  font-size: 14px;
+  color: #94a3b8;
+  margin-top: 25px;
+}
+
+/* Glow Effect */
+.glow {
+  font-size: 28px;
   font-weight: bold;
-  background: linear-gradient(135deg, #4f46e5, #22c55e, #06b6d4);
+  background: linear-gradient(135deg, #4f46e5, #22c55e);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   margin-bottom: 20px;
-  animation: glow 2s ease-in-out infinite;
-}
-
-@keyframes glow {
-  0%, 100% { text-shadow: 0 0 20px rgba(79,70,229,0.3); }
-  50% { text-shadow: 0 0 40px rgba(34,197,94,0.5); }
-}
-
-/* Modern Loader */
-.loader {
-  width: 80px;
-  height: 80px;
-  margin: 30px auto;
-  position: relative;
-}
-
-.loader::before,
-.loader::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.loader::before {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #4f46e5, #22c55e);
-  box-shadow: 0 0 30px rgba(79,70,229,0.5);
-}
-
-.loader::after {
-  width: 70%;
-  height: 70%;
-  background: #010214;
-  top: 15%;
-  left: 15%;
-  animation-delay: -0.75s;
-}
-
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.1); opacity: 0.8; }
-}
-
-/* Progress Bar */
-.progress-container {
-  width: 280px;
-  margin: 30px auto 20px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 50px;
-  padding: 3px;
-}
-
-.progress-bar {
-  height: 6px;
-  background: linear-gradient(90deg, #4f46e5, #22c55e);
-  border-radius: 50px;
-  width: 0%;
-  animation: progress 2.5s ease forwards;
-}
-
-@keyframes progress {
-  0% { width: 0%; }
-  30% { width: 45%; }
-  60% { width: 78%; }
-  100% { width: 100%; }
-}
-
-/* Text */
-.loading-text {
-  color: #e2e8f0;
-  font-size: 14px;
-  letter-spacing: 2px;
-  margin-top: 20px;
-}
-
-.loading-text span {
-  color: #22c55e;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Percentage */
-.percentage {
-  font-size: 32px;
-  font-weight: bold;
-  background: linear-gradient(135deg, #4f46e5, #22c55e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 10px;
-}
-
-/* Particles */
-.particles {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
 }
 </style>
 </head>
 <body>
 
-<div class="circle circle1"></div>
-<div class="circle circle2"></div>
-<div class="circle circle3"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
-<div class="loader-container">
-  <div class="logo">TOJI APIs</div>
-  <div class="percentage" id="percentage">0%</div>
-  <div class="loader"></div>
-  <div class="progress-container">
-    <div class="progress-bar"></div>
+<div class="card">
+  <div class="glow">TOJI APIs</div>
+  
+  <div class="dots-loader">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
   </div>
-  <div class="loading-text">
-    جاري تهيئة المنصة <span>...</span>
+  
+  <div class="wave-text">
+    <span style="--i:1">ج</span>
+    <span style="--i:2">ا</span>
+    <span style="--i:3">ر</span>
+    <span style="--i:4">ي</span>
+    <span style="--i:5"> </span>
+    <span style="--i:6">ا</span>
+    <span style="--i:7">ل</span>
+    <span style="--i:8">ت</span>
+    <span style="--i:9">ح</span>
+    <span style="--i:10">م</span>
+    <span style="--i:11">ي</span>
+    <span style="--i:12">ل</span>
   </div>
+  
+  <div class="message" id="message">⚡ تهيئة البيئة</div>
 </div>
 
 <script>
-let percent = 0;
-const percentageEl = document.getElementById('percentage');
+const messages = [
+  "⚡ تهيئة البيئة",
+  "🔗 جلب البيانات",
+  "✨ تجهيز الواجهات",
+  "🚀 التشغيل النهائي"
+];
 
-function updatePercentage() {
-  if (percent <= 100) {
-    percentageEl.textContent = percent + '%';
-    percent++;
-    setTimeout(updatePercentage, 25);
-  }
-}
-updatePercentage();
+let msgIndex = 0;
+const msgEl = document.getElementById('message');
+
+setInterval(() => {
+  msgIndex = (msgIndex + 1) % messages.length;
+  msgEl.textContent = messages[msgIndex];
+}, 800);
 
 setTimeout(() => {
   window.location.href = "dashboard.html";
-}, 2500);
+}, 3000);
 </script>
 </body>
 </html>
