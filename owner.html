@@ -1,188 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>TOJI DEV | Contact</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOJI APIs - تواصل مع المطور</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma,sans-serif;}
+body{background:#010214;color:white;overflow-x:hidden;}
+body::before,body::after{
+  content:"";position:fixed;width:400px;height:400px;filter:blur(80px);opacity:.3;pointer-events:none;
+}
+body::before{top:-150px;left:-150px;background:radial-gradient(circle,#4f46e5,#010214);}
+body::after{bottom:-150px;right:-150px;background:radial-gradient(circle,#22c55e,#010214);}
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(2,6,23,.8);backdrop-filter:blur(8px);border-bottom:1px solid #1f2937;position:fixed;width:100%;top:0;z-index:15;}
+.logo{font-size:20px;font-weight:bold;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;}
+.menu-btn{font-size:24px;cursor:pointer;}
 
-  <style>
-    :root {
-      --neon: #00bfff;
-      --bg: #050b14;
-      --card: #0a1628;
-      --text: #e6f7ff;
-    }
+.sidebar{position:fixed;top:0;right:-260px;width:220px;height:100%;background:#010214;border-left:1px solid #1f2937;padding:20px;transition:.4s;z-index:10;}
+.sidebar.active{right:0;}
+.sidebar-header{text-align:center;margin-bottom:20px;}
+.sidebar-header img{width:60px;height:60px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:8px;object-fit:cover;}
+.sidebar-header h3{font-size:14px;color:#9ca3af;}
+.menu a{display:flex;align-items:center;gap:8px;padding:10px;margin-bottom:8px;border-radius:10px;text-decoration:none;color:#9ca3af;transition:.25s;font-size:13px;direction:rtl;}
+.menu a.active{background:linear-gradient(90deg,#4f46e5,#22c55e);color:white;}
+.menu a:hover{background:#0f172a;color:white;}
 
-    * {
-      box-sizing: border-box;
-      font-family: "Segoe UI", Tahoma, sans-serif;
-    }
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.3s;z-index:5;}
+.overlay.active{opacity:1;visibility:visible;}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #08162b, var(--bg));
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 900px;
-      text-align: center;
-      animation: fadeIn 0.8s ease;
-    }
-
-    .title {
-      font-size: 32px;
-      margin-bottom: 10px;
-      color: var(--neon);
-      text-shadow: 0 0 12px rgba(0,191,255,.7);
-    }
-
-    .subtitle {
-      opacity: 0.8;
-      margin-bottom: 40px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 25px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 25px 15px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid rgba(0,191,255,.25);
-      transition: 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(0,191,255,.15),
-        transparent
-      );
-      transform: translateX(-100%);
-      transition: 0.6s;
-    }
-
-    .card:hover::before {
-      transform: translateX(100%);
-    }
-
-    .card:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 0 25px rgba(0,191,255,.35);
-    }
-
-    .icon {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 15px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: var(--neon);
-      border: 2px solid var(--neon);
-      box-shadow: 0 0 15px rgba(0,191,255,.5);
-    }
-
-    .label {
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
-
-    .small {
-      font-size: 13px;
-      opacity: 0.7;
-      word-break: break-all;
-    }
-
-    .back {
-      margin-top: 40px;
-    }
-
-    .back a {
-      color: var(--neon);
-      text-decoration: none;
-      border: 1px solid var(--neon);
-      padding: 10px 22px;
-      border-radius: 30px;
-      transition: 0.3s;
-    }
-
-    .back a:hover {
-      background: var(--neon);
-      color: #001018;
-      box-shadow: 0 0 18px rgba(0,191,255,.7);
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  </style>
+.container{padding:80px 20px 20px 20px;max-width:700px;margin:auto;}
+.owner-card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:24px;padding:40px;text-align:center;}
+.owner-card img{width:120px;height:120px;border-radius:50%;border:3px solid #4f46e5;margin-bottom:20px;object-fit:cover;}
+.owner-card h2{font-size:24px;margin-bottom:10px;}
+.owner-card p{color:#9ca3af;margin-bottom:20px;}
+.info-box{background:#111827;border-radius:16px;padding:20px;margin:20px 0;text-align:right;}
+.info-item{display:flex;align-items:center;gap:10px;margin-bottom:15px;padding:10px;border-bottom:1px solid #1f2937;}
+.info-item:last-child{border-bottom:none;}
+.info-item span:first-child{font-size:20px;}
+.info-item a{color:#4f46e5;text-decoration:none;}
+.info-item a:hover{text-decoration:underline;}
+.btn{padding:12px 30px;border:none;border-radius:12px;cursor:pointer;font-weight:bold;transition:.3s;margin:5px;}
+.primary{background:linear-gradient(90deg,#6366f1,#22c55e);color:white;}
+.secondary{background:#010214;border:1px solid #1f2937;color:#9ca3af;}
+.btn:hover{transform:scale(1.05);}
+.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#6366f1;padding:8px 16px;border-radius:10px;color:white;font-weight:bold;opacity:0;transition:.4s;z-index:100;}
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="title">Contact the Developer</div>
-    <div class="subtitle">TOJI DEV official contact links</div>
+<div class="topbar">
+  <div class="logo">TOJI APIs</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
+</div>
 
-    <div class="grid">
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h3 id="sidebarName">TOJI Dev</h3>
+  </div>
+  <div class="menu">
+    <a href="dashboard.html">🏠 لوحة التحكم</a>
+    <a href="apis.html">🛠️ APIs</a>
+    <a href="owner.html" class="active">📞 تواصل مع المطور</a>
+    <a href="profile.html">👤 الملف الشخصي</a>
+  </div>
+</div>
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
-      <a class="card" href="https://wa.me/201014994070" target="_blank">
-        <div class="icon"><i class="fab fa-whatsapp"></i></div>
-        <div class="label">WhatsApp</div>
-        <div class="small">wa.me/201014994070</div>
-      </a>
-
-
-
-      <a class="card" href="https://whatsapp.com/channel/0029Vb6NEcPAu3aQEal0V11P" target="_blank">
-        <div class="icon"><i class="fab fa-whatsapp"></i></div>
-        <div class="label">WhatsApp Channel</div>
-        <div class="small">Official channel</div>
-      </a>
-
-
-      <a class="card" href="mailto:amreky205@gmail.com">
-        <div class="icon"><i class="fas fa-envelope"></i></div>
-        <div class="label">Gmail</div>
-        <div class="small">amreky205@gmail.com</div>
-      </a>
-
+<div class="container">
+  <div class="owner-card">
+    <img id="ownerProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h2 id="ownerName">TOJI Dev</h2>
+    <p>مطور APIs | مبتكر حلول برمجية</p>
+    
+    <div class="info-box">
+      <div class="info-item">
+        <span>📧</span>
+        <span>amreky205@gmail.com</span>
+        <button class="btn secondary" style="margin-right:auto;padding:5px 12px;" onclick="copyEmail()">نسخ</button>
+      </div>
+      <div class="info-item">
+        <span>💬</span>
+        <span>دعم فني 24/7</span>
+      </div>
+      <div class="info-item">
+        <span>🔗</span>
+        <a href="#">https://toji-eltiktoker.vercel.app/apis.html</a>
+      </div>
+      <div class="info-item">
+        <span>📱</span>
+        <span>+201014994070</span>
+      </div>
     </div>
-
-    <div class="back">
-      <a href="dashboard.html">Back to Platform</a>
+    
+    <div>
+      <button class="btn primary" onclick="location.href='apis.html'">استكشف APIs</button>
+      <button class="btn secondary" onclick="location.href='dashboard.html'">الرئيسية</button>
     </div>
   </div>
+</div>
 
+<div id="toast" class="toast">تم النسخ!</div>
+
+<script>
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+function copyEmail(){
+  navigator.clipboard.writeText("amreky205@gmail.com");
+  showToast("✅ تم نسخ البريد الإلكتروني");
+}
+
+function showToast(msg){
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.style.opacity = "1";
+  setTimeout(() => { toast.style.opacity = "0"; }, 1500);
+}
+
+let profileImage = localStorage.getItem("profileImage");
+let profileName = localStorage.getItem("profileName");
+if(profileImage){
+  document.getElementById("sidebarProfile").src = profileImage;
+  document.getElementById("ownerProfile").src = profileImage;
+}
+if(profileName){
+  document.getElementById("sidebarName").innerText = profileName;
+  document.getElementById("ownerName").innerText = profileName;
+}
+</script>
 </body>
 </html>
