@@ -3,243 +3,454 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | TOJI APIs</title>
+<title>TOJI APIs | Login</title>
 
 <style>
-*{ margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,Arial; }
-
-body{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  background:#070b14;
-  color:white;
-  position:relative;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-/* Background Grid */
-body::before{
-  content:"";
-  position:absolute;
-  width:200%;
-  height:200%;
-  background:
-    linear-gradient(90deg, transparent 98%, rgba(0,255,170,0.1) 100%),
-    linear-gradient(180deg, transparent 98%, rgba(0,255,170,0.08) 100%);
-  background-size:60px 60px;
-  animation:gridMove 20s linear infinite;
-}
-@keyframes gridMove{
-  0%{transform:translate(0,0);}
-  100%{transform:translate(-250px,-250px);}
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 30%, #0a0f1f, #03050c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Glow Lights */
-.light{
-  position:absolute;
-  width:600px;
-  height:600px;
-  border-radius:50%;
-  filter:blur(180px);
-  opacity:0.25;
-  animation: glowPulse 6s ease-in-out infinite;
-}
-.light1{ background:#00ffaa; top:-150px; left:-150px; }
-.light2{ background:#4f7cff; bottom:-160px; right:-160px; }
-@keyframes glowPulse{
-  0%,100%{opacity:0.2; transform:scale(1);}
-  50%{opacity:0.35; transform:scale(1.15);}
+/* Animated Background */
+.bg-shape {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  filter: blur(120px);
+  animation: float 10s ease-in-out infinite;
 }
 
-/* Glass Card */
-.card{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:420px;
-  padding:60px 40px;
-  border-radius:25px;
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(30px) saturate(220%);
-  -webkit-backdrop-filter: blur(30px) saturate(220%);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 0 50px rgba(0,255,170,0.3);
-  text-align:center;
-  animation: cardGlow 2.5s infinite alternate;
-  transition:0.3s ease;
-}
-.card:hover{
-  box-shadow: 0 0 80px #00ffaa, 0 0 160px #00c3ff;
-  transform: translateY(-6px);
-}
-@keyframes cardGlow{
-  0%{box-shadow:0 0 30px #00ffaa,0 0 60px #00c3ff;}
-  100%{box-shadow:0 0 60px #00ffaa,0 0 120px #00c3ff;}
+.shape1 {
+  background: #00ffaa;
+  top: -150px;
+  left: -150px;
+  opacity: 0.3;
 }
 
-h1{ margin-bottom:12px; font-size:30px; letter-spacing:1px;}
-.subtitle{ opacity:0.7; margin-bottom:35px; font-size:16px; }
-
-/* Input Fields */
-.input-box{ position:relative; margin-top:20px; }
-.input-box input{
-  width:100%;
-  padding:16px;
-  border-radius:15px;
-  border:1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.02);
-  color:white;
-  outline:none;
-  transition:0.3s ease;
-  backdrop-filter: blur(15px);
-  font-size:15px;
-}
-.input-box input:focus{
-  border:1px solid #00ffaa;
-  box-shadow:0 0 20px #00ffaa;
-}
-.show{
-  position:absolute;
-  right:15px;
-  top:50%;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:14px;
-  color:#00ffaa;
-  user-select:none;
+.shape2 {
+  background: #4f7cff;
+  bottom: -150px;
+  right: -150px;
+  opacity: 0.3;
+  animation-delay: -5s;
 }
 
-/* Button */
-button{
-  position:relative;
-  overflow:hidden;
-  width:100%;
-  padding:16px;
-  margin-top:28px;
-  border:none;
-  border-radius:15px;
-  background: linear-gradient(135deg, rgba(0,255,170,0.3), rgba(0,195,255,0.3));
-  backdrop-filter: blur(15px);
-  color:#fff;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s ease;
-  animation: buttonGlow 2s infinite alternate;
-}
-button:hover{
-  box-shadow:0 0 30px #00ffaa, 0 0 60px #00c3ff;
-  transform:translateY(-3px);
-}
-@keyframes buttonGlow{
-  0%{box-shadow:0 0 15px #00ffaa,0 0 30px #00c3ff;}
-  100%{box-shadow:0 0 30px #00ffaa,0 0 60px #00c3ff;}
+.shape3 {
+  background: #ff44aa;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  opacity: 0.2;
+  animation-duration: 15s;
 }
 
-/* Messages */
-#msg{
-  margin-top:20px;
-  padding:14px;
-  border-radius:12px;
-  font-size:14px;
-  display:none;
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -50px) scale(1.1); }
 }
-.msg-error{ background:#ff4d4d33; color:#ff8080; }
-.msg-success{ background:#00ffaa33; color:#6bffd6; }
 
-/* Switch */
-.switch{ margin-top:25px; font-size:14px; }
-.switch a{ color:#00ffaa; text-decoration:none; }
+/* Main Card */
+.login-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
 
-/* Loading state */
-button.loading{
-  animation: none;
+.login-card {
+  background: rgba(10, 15, 31, 0.7);
+  backdrop-filter: blur(20px);
+  border-radius: 32px;
+  padding: 48px 40px;
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.login-card:hover {
+  border-color: rgba(0, 255, 170, 0.5);
+  box-shadow: 0 0 40px rgba(0, 255, 170, 0.1);
+}
+
+/* Logo */
+.logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo h1 {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffaa, #4f7cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+}
+
+.logo p {
+  color: #8b9bb0;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* Input Groups */
+.input-group {
+  margin-bottom: 24px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(20, 27, 45, 0.8);
+  border: 1.5px solid rgba(0, 255, 170, 0.2);
+  border-radius: 16px;
+  color: white;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #00ffaa;
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+  background: rgba(20, 27, 45, 1);
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 50px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #00ffaa;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(0, 255, 170, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+
+.toggle-password:hover {
+  background: rgba(0, 255, 170, 0.2);
+}
+
+/* Options */
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+  font-size: 13px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #8b9bb0;
+  cursor: pointer;
+}
+
+.remember input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #00ffaa;
+}
+
+.forgot {
+  color: #00ffaa;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.forgot:hover {
+  text-shadow: 0 0 8px #00ffaa;
+}
+
+/* Login Button */
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #00ffaa, #4f7cff);
+  border: none;
+  border-radius: 16px;
+  color: #03050c;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 255, 170, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn.loading {
   opacity: 0.7;
   cursor: wait;
-}
-button.loading:hover{
   transform: none;
-  box-shadow: none;
+}
+
+/* Register Link */
+.register-link {
+  text-align: center;
+  margin-top: 28px;
+  color: #8b9bb0;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: #00ffaa;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* Message */
+.message {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  display: none;
+  text-align: center;
+}
+
+.message.error {
+  background: rgba(255, 77, 77, 0.15);
+  color: #ff8080;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  display: block;
+}
+
+.message.success {
+  background: rgba(0, 255, 170, 0.15);
+  color: #6bffd6;
+  border: 1px solid rgba(0, 255, 170, 0.3);
+  display: block;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+  
+  .logo h1 {
+    font-size: 28px;
+  }
+  
+  .options {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
 }
 </style>
 </head>
 <body>
 
-<div class="light light1"></div>
-<div class="light light2"></div>
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
 
-<div class="card">
-<h1>Welcome Back</h1>
-<p class="subtitle">Login to your account</p>
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo">
+      <h1>TOJI APIs</h1>
+      <p>Welcome back • Sign in to continue</p>
+    </div>
 
-<div class="input-box">
-  <input id="email" placeholder="Email">
-</div>
+    <div class="input-group">
+      <label>📧 Email Address</label>
+      <input type="email" id="email" placeholder="hello@toji.com">
+    </div>
 
-<div class="input-box">
-  <input id="password" type="password" placeholder="Password">
-  <span class="show" onclick="togglePass()">Show</span>
-</div>
+    <div class="input-group">
+      <label>🔒 Password</label>
+      <div class="password-wrapper">
+        <input type="password" id="password" placeholder="Enter your password">
+        <span class="toggle-password" onclick="togglePassword()">Show</span>
+      </div>
+    </div>
 
-<button id="loginBtn" onclick="login()">Login</button>
-<div id="msg"></div>
+    <div class="options">
+      <label class="remember">
+        <input type="checkbox" id="remember"> Remember me
+      </label>
+      <a href="#" class="forgot" onclick="alert('Reset link sent to your email')">Forgot password?</a>
+    </div>
 
-<p class="switch">
-Don't have an account?
-<a href="register.html">Register</a>
-</p>
+    <button class="login-btn" id="loginBtn" onclick="handleLogin()">Login</button>
+
+    <div id="message" class="message"></div>
+
+    <div class="register-link">
+      Don't have an account?
+      <a href="#" onclick="alert('Registration coming soon')">Create account</a>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-const supabaseClient = supabase.createClient(
-"https://rcxjwetrmtwxkdqdurfw.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
+const supabase = supabase.createClient(
+  "https://rcxjwetrmtwxkdqdurfw.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
 );
 
-function togglePass(){
-  let pass=document.getElementById("password");
-  pass.type = pass.type==="password" ? "text" : "password";
+function togglePassword() {
+  const pass = document.getElementById('password');
+  const toggle = document.querySelector('.toggle-password');
+  if (pass.type === 'password') {
+    pass.type = 'text';
+    toggle.textContent = 'Hide';
+  } else {
+    pass.type = 'password';
+    toggle.textContent = 'Show';
+  }
 }
 
-async function login(){
-  let email=document.getElementById("email").value.trim();
-  let password=document.getElementById("password").value.trim();
-  let msg=document.getElementById("msg");
-  let btn=document.getElementById("loginBtn");
+async function handleLogin() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const messageDiv = document.getElementById('message');
+  const loginBtn = document.getElementById('loginBtn');
 
-  if(email=="" || password==""){
-    msg.style.display="block";
-    msg.className="msg-error";
-    msg.innerText="Enter email and password";
+  // Hide previous message
+  messageDiv.className = 'message';
+  messageDiv.style.display = 'none';
+
+  // Validation
+  if (!email || !password) {
+    messageDiv.className = 'message error';
+    messageDiv.textContent = '❌ Please enter email and password';
+    messageDiv.style.display = 'block';
     return;
   }
 
-  btn.classList.add("loading");
-  btn.innerText = "Logging in...";
+  // Email validation
+  const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    messageDiv.className = 'message error';
+    messageDiv.textContent = '❌ Invalid email format';
+    messageDiv.style.display = 'block';
+    return;
+  }
 
-  let {data,error}=await supabaseClient.auth.signInWithPassword({
-    email:email,
-    password:password
-  });
+  // Loading state
+  loginBtn.classList.add('loading');
+  loginBtn.textContent = 'Logging in...';
 
-  if(error){
-    msg.style.display="block";
-    msg.className="msg-error";
-    msg.innerText=error.message;
-    btn.classList.remove("loading");
-    btn.innerText = "Login";
-  }else{
-    localStorage.setItem("user","true");
-    localStorage.setItem("email",email);
-    msg.style.display="block";
-    msg.className="msg-success";
-    msg.innerText="Login successful...";
-    setTimeout(()=>{ window.location="dashboard.html"; },1000);
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      messageDiv.className = 'message error';
+      if (error.message.includes('Invalid login credentials')) {
+        messageDiv.textContent = '❌ Wrong email or password';
+      } else if (error.message.includes('Email not confirmed')) {
+        messageDiv.textContent = '❌ Please confirm your email first';
+      } else {
+        messageDiv.textContent = '❌ ' + error.message;
+      }
+      messageDiv.style.display = 'block';
+      loginBtn.classList.remove('loading');
+      loginBtn.textContent = 'Login';
+    } else {
+      // Save session
+      localStorage.setItem('user', 'true');
+      localStorage.setItem('email', email);
+      
+      if (document.getElementById('remember').checked) {
+        localStorage.setItem('rememberEmail', email);
+      } else {
+        localStorage.removeItem('rememberEmail');
+      }
+
+      messageDiv.className = 'message success';
+      messageDiv.textContent = '✅ Login successful! Redirecting...';
+      messageDiv.style.display = 'block';
+
+      // Redirect to loading page
+      setTimeout(() => {
+        window.location.href = 'loading.html';
+      }, 1200);
+    }
+  } catch (err) {
+    messageDiv.className = 'message error';
+    messageDiv.textContent = '❌ Something went wrong. Try again.';
+    messageDiv.style.display = 'block';
+    loginBtn.classList.remove('loading');
+    loginBtn.textContent = 'Login';
   }
 }
+
+// Load remembered email
+window.onload = () => {
+  const savedEmail = localStorage.getItem('rememberEmail');
+  if (savedEmail) {
+    document.getElementById('email').value = savedEmail;
+    document.getElementById('remember').checked = true;
+  }
+};
+
+// Enter key support
+document.getElementById('password').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') handleLogin();
+});
+document.getElementById('email').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') handleLogin();
+});
 </script>
 </body>
 </html>
