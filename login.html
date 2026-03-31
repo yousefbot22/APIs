@@ -250,7 +250,7 @@ body {
       <label>🔒 Password</label>
       <div class="password-wrapper">
         <input type="password" id="password" placeholder="Enter your password">
-        <button type="button" class="toggle-password" onclick="togglePassword()">Show</button>
+        <button type="button" class="toggle-password" id="toggleBtn">Show</button>
       </div>
     </div>
 
@@ -258,16 +258,16 @@ body {
       <label class="remember">
         <input type="checkbox" id="remember"> Remember me
       </label>
-      <button type="button" class="forgot" onclick="forgotPassword()">Forgot password?</button>
+      <button type="button" class="forgot" id="forgotBtn">Forgot password?</button>
     </div>
 
-    <button type="button" class="login-btn" onclick="login()">Login</button>
+    <button type="button" class="login-btn" id="loginBtn">Login</button>
 
     <div id="message" class="message"></div>
 
     <div class="register-link">
       Don't have an account?
-      <a href="#" onclick="register()">Create account</a>
+      <a href="#" id="registerBtn">Create account</a>
     </div>
   </div>
 </div>
@@ -275,135 +275,130 @@ body {
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
 // Supabase Config
-const supabase = supabase.createClient(
+const _supabase = supabase.createClient(
   "https://rcxjwetrmtwxkdqdurfw.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
 );
 
-// Test if script loaded
-console.log("Script loaded successfully");
+// Get DOM elements
+const emailField = document.getElementById('email');
+const passwordField = document.getElementById('password');
+const loginButton = document.getElementById('loginBtn');
+const toggleButton = document.getElementById('toggleBtn');
+const forgotButton = document.getElementById('forgotBtn');
+const registerButton = document.getElementById('registerBtn');
+const messageBox = document.getElementById('message');
+const rememberBox = document.getElementById('remember');
 
 // Toggle Password
-function togglePassword() {
-  console.log("Toggle password clicked");
-  const pass = document.getElementById('password');
-  const btn = event.target;
-  if (pass.type === 'password') {
-    pass.type = 'text';
-    btn.textContent = 'Hide';
+toggleButton.onclick = function() {
+  if (passwordField.type === 'password') {
+    passwordField.type = 'text';
+    toggleButton.textContent = 'Hide';
   } else {
-    pass.type = 'password';
-    btn.textContent = 'Show';
+    passwordField.type = 'password';
+    toggleButton.textContent = 'Show';
   }
-}
+};
 
 // Forgot Password
-function forgotPassword() {
-  console.log("Forgot password clicked");
+forgotButton.onclick = function() {
   alert('📧 Password reset link will be sent to your email');
-}
+};
 
 // Register
-function register() {
-  console.log("Register clicked");
+registerButton.onclick = function() {
   alert('📝 Registration page coming soon!');
-}
+};
 
 // Login Function
-async function login() {
-  console.log("Login button clicked");
-  
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  const msgDiv = document.getElementById('message');
-  const btn = event.target;
+loginButton.onclick = async function() {
+  const email = emailField.value.trim();
+  const password = passwordField.value.trim();
 
-  msgDiv.className = 'message';
-  msgDiv.style.display = 'none';
+  messageBox.className = 'message';
+  messageBox.style.display = 'none';
 
   if (!email || !password) {
-    msgDiv.className = 'message error';
-    msgDiv.textContent = '❌ Please enter email and password';
-    msgDiv.style.display = 'block';
+    messageBox.className = 'message error';
+    messageBox.textContent = '❌ Please enter email and password';
+    messageBox.style.display = 'block';
     return;
   }
 
   const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    msgDiv.className = 'message error';
-    msgDiv.textContent = '❌ Invalid email format';
-    msgDiv.style.display = 'block';
+    messageBox.className = 'message error';
+    messageBox.textContent = '❌ Invalid email format';
+    messageBox.style.display = 'block';
     return;
   }
 
-  btn.textContent = 'Logging in...';
-  btn.disabled = true;
+  loginButton.textContent = 'Logging in...';
+  loginButton.disabled = true;
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await _supabase.auth.signInWithPassword({
       email: email,
       password: password
     });
 
     if (error) {
-      msgDiv.className = 'message error';
+      messageBox.className = 'message error';
       if (error.message.includes('Invalid login credentials')) {
-        msgDiv.textContent = '❌ Wrong email or password';
+        messageBox.textContent = '❌ Wrong email or password';
       } else if (error.message.includes('Email not confirmed')) {
-        msgDiv.textContent = '❌ Please confirm your email first';
+        messageBox.textContent = '❌ Please confirm your email first';
       } else {
-        msgDiv.textContent = '❌ ' + error.message;
+        messageBox.textContent = '❌ ' + error.message;
       }
-      msgDiv.style.display = 'block';
-      btn.textContent = 'Login';
-      btn.disabled = false;
+      messageBox.style.display = 'block';
+      loginButton.textContent = 'Login';
+      loginButton.disabled = false;
     } else {
       localStorage.setItem('user', 'true');
       localStorage.setItem('email', email);
       
-      if (document.getElementById('remember').checked) {
+      if (rememberBox.checked) {
         localStorage.setItem('rememberEmail', email);
       } else {
         localStorage.removeItem('rememberEmail');
       }
 
-      msgDiv.className = 'message success';
-      msgDiv.textContent = '✅ Login successful! Redirecting...';
-      msgDiv.style.display = 'block';
+      messageBox.className = 'message success';
+      messageBox.textContent = '✅ Login successful! Redirecting...';
+      messageBox.style.display = 'block';
 
-      setTimeout(() => {
+      setTimeout(function() {
         window.location.href = 'loading.html';
       }, 1200);
     }
   } catch (err) {
-    msgDiv.className = 'message error';
-    msgDiv.textContent = '❌ Something went wrong';
-    msgDiv.style.display = 'block';
-    btn.textContent = 'Login';
-    btn.disabled = false;
+    messageBox.className = 'message error';
+    messageBox.textContent = '❌ Something went wrong';
+    messageBox.style.display = 'block';
+    loginButton.textContent = 'Login';
+    loginButton.disabled = false;
   }
-}
+};
 
 // Load saved email
-window.onload = function() {
-  console.log("Page loaded");
-  const savedEmail = localStorage.getItem('rememberEmail');
-  if (savedEmail) {
-    document.getElementById('email').value = savedEmail;
-    document.getElementById('remember').checked = true;
+const savedEmail = localStorage.getItem('rememberEmail');
+if (savedEmail) {
+  emailField.value = savedEmail;
+  rememberBox.checked = true;
+}
+
+// Enter key support
+passwordField.onkeypress = function(e) {
+  if (e.key === 'Enter') {
+    loginButton.click();
   }
-  
-  // Enter key support
-  document.getElementById('password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      login();
-    }
-  });
-  document.getElementById('email').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      login();
-    }
-  });
+};
+emailField.onkeypress = function(e) {
+  if (e.key === 'Enter') {
+    loginButton.click();
+  }
 };
 </script>
 </body>
