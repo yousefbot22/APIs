@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOJI APIs</title>
+<title>TOJI APIs - الواجهات</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma,sans-serif;}
 body{background:#010214;color:white;overflow-x:hidden;}
@@ -13,45 +13,41 @@ body::before,body::after{
 body::before{top:-150px;left:-150px;background:radial-gradient(circle,#4f46e5,#010214);}
 body::after{bottom:-150px;right:-150px;background:radial-gradient(circle,#22c55e,#010214);}
 
-/* Topbar */
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(2,6,23,.8);backdrop-filter:blur(8px);border-bottom:1px solid #1f2937;position:fixed;width:100%;top:0;z-index:15;}
 .logo{font-size:20px;font-weight:bold;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;}
 .menu-btn{font-size:24px;cursor:pointer;}
 
-/* Sidebar */
 .sidebar{position:fixed;top:0;right:-260px;width:220px;height:100%;background:#010214;border-left:1px solid #1f2937;padding:20px;transition:.4s;z-index:10;}
 .sidebar.active{right:0;}
 .sidebar-header{text-align:center;margin-bottom:20px;}
-.sidebar-header img{width:60px;height:60px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:8px;}
+.sidebar-header img{width:60px;height:60px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:8px;object-fit:cover;}
 .sidebar-header h3{font-size:14px;color:#9ca3af;}
 .menu a{display:flex;align-items:center;gap:8px;padding:10px;margin-bottom:8px;border-radius:10px;text-decoration:none;color:#9ca3af;transition:.25s;font-size:13px;direction:rtl;}
 .menu a.active{background:linear-gradient(90deg,#4f46e5,#22c55e);color:white;}
 .menu a:hover{background:#0f172a;color:white;}
 
-/* Overlay */
 .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.3s;z-index:5;}
 .overlay.active{opacity:1;visibility:visible;}
 
-/* Page */
-.container{padding:80px 20px 20px 20px;max-width:900px;margin:auto;}
+.container{padding:80px 20px 20px 20px;max-width:1000px;margin:auto;}
 .page-title{font-size:28px;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;margin-bottom:8px;text-align:right;}
 .page-desc{color:#9ca3af;margin-bottom:20px;font-size:14px;text-align:right;}
 
-/* Grid */
-.api-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
+.api-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
 
-/* Card */
-.api-card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:16px;padding:18px;transition:.35s;position:relative;overflow:hidden;text-align:right;}
+.api-card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:16px;padding:20px;transition:.35s;position:relative;overflow:hidden;text-align:right;}
 .api-card:hover{transform:translateY(-6px) scale(1.02);border:1px solid #6366f1;box-shadow:0 10px 40px rgba(99,102,241,.3);}
 .api-card::before{content:"";position:absolute;width:150px;height:150px;background:radial-gradient(circle,#6366f1,transparent);top:-40px;right:-40px;opacity:.15;}
-.endpoint{background:#111827;padding:8px;border-radius:6px;font-size:12px;word-break:break-all;margin-bottom:10px;}
+.api-card h3{font-size:18px;margin-bottom:5px;}
+.api-card p{font-size:12px;color:#9ca3af;margin-bottom:12px;}
+.endpoint{background:#111827;padding:8px;border-radius:6px;font-size:11px;word-break:break-all;margin-bottom:10px;direction:ltr;text-align:left;}
 .input{width:100%;padding:10px;border-radius:6px;border:1px solid #1f2937;background:#010214;color:white;margin-bottom:10px;font-size:13px;text-align:right;}
 .input:focus{outline:none;border:1px solid #6366f1;box-shadow:0 0 10px rgba(99,102,241,.4);}
-.btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;margin-right:5px;transition:.3s;font-size:13px;}
+.btn{padding:8px 12px;border:none;border-radius:8px;cursor:pointer;margin-left:5px;transition:.3s;font-size:13px;}
 .primary{background:linear-gradient(90deg,#6366f1,#22c55e);color:white;}
 .secondary{background:#010214;border:1px solid #1f2937;color:#9ca3af;}
 .btn:hover{transform:scale(1.08);box-shadow:0 0 12px rgba(99,102,241,.5);}
-.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#6366f1;padding:8px 16px;border-radius:10px;color:white;font-weight:bold;opacity:0;transition:.4s;font-size:13px;}
+.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#6366f1;padding:8px 16px;border-radius:10px;color:white;font-weight:bold;opacity:0;transition:.4s;font-size:13px;z-index:100;}
 </style>
 </head>
 <body>
@@ -76,41 +72,49 @@ body::after{bottom:-150px;right:-150px;background:radial-gradient(circle,#22c55e
 <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
 <div class="container">
-  <h1 class="page-title">APIs</h1>
-  <p class="page-desc">جرب واجهات البرمجة الخاصة بنا بسهولة.</p>
+  <h1 class="page-title">واجهات البرمجة APIs</h1>
+  <p class="page-desc">جرب واجهاتنا مباشرة - أدخل الرابط أو النص وجرب الأداء</p>
 
   <div class="api-grid">
-    <!-- YT3 -->
+    <!-- YT3 Downloader -->
     <div class="api-card">
-      <h3>YT3 Downloader</h3>
-      <p>تحميل الصوت من يوتيوب</p>
+      <h3>🎵 YT3 Downloader</h3>
+      <p>تحميل الصوت من مقاطع اليوتيوب</p>
       <div class="endpoint" id="endpoint-yt3">https://toji-eltiktoker.vercel.app/api/yt3?url=</div>
-      <input class="input" id="input-yt3" placeholder="ضع رابط الفيديو">
-      <button class="btn primary" onclick="tryAPI('yt3')">جرب</button>
-      <button class="btn secondary" onclick="copyAPI('yt3')">نسخ</button>
+      <input class="input" id="input-yt3" placeholder="ضع رابط الفيديو هنا">
+      <div>
+        <button class="btn primary" onclick="tryAPI('yt3')">▶ جرب</button>
+        <button class="btn secondary" onclick="copyAPI('yt3')">📋 نسخ الرابط</button>
+      </div>
     </div>
-    <!-- YT4 -->
+    
+    <!-- YT4 Video -->
     <div class="api-card">
-      <h3>YouTube 360p</h3>
-      <p>تحميل فيديو 360p</p>
+      <h3>📹 YouTube 360p</h3>
+      <p>تحميل الفيديو بجودة 360p</p>
       <div class="endpoint" id="endpoint-yt4">https://toji-eltiktoker.vercel.app/api/yt4?url=</div>
       <input class="input" id="input-yt4" placeholder="ضع رابط الفيديو">
-      <button class="btn primary" onclick="tryAPI('yt4')">جرب</button>
-      <button class="btn secondary" onclick="copyAPI('yt4')">نسخ</button>
+      <div>
+        <button class="btn primary" onclick="tryAPI('yt4')">▶ جرب</button>
+        <button class="btn secondary" onclick="copyAPI('yt4')">📋 نسخ الرابط</button>
+      </div>
     </div>
-    <!-- Akinator -->
+    
+    <!-- AI Assistant -->
     <div class="api-card">
-      <h3>ai</h3>
-      <p>ai smart</p>
+      <h3>🤖 AI Assistant</h3>
+      <p>ذكاء اصطناعي للرد على استفساراتك</p>
       <div class="endpoint" id="endpoint-gpt">https://toji-eltiktoker.vercel.app/api/gpt?q=</div>
-      <input class="input" id="input-gpt" placeholder="ابدأ">
-      <button class="btn primary" onclick="tryAPI('gpt')">جرب</button>
-      <button class="btn secondary" onclick="copyAPI('gpt')">نسخ</button>
+      <input class="input" id="input-gpt" placeholder="اكتب سؤالك هنا">
+      <div>
+        <button class="btn primary" onclick="tryAPI('gpt')">▶ جرب</button>
+        <button class="btn secondary" onclick="copyAPI('gpt')">📋 نسخ الرابط</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="toast" class="toast">تم النسخ</div>
+<div id="toast" class="toast">تم النسخ!</div>
 
 <script>
 function toggleMenu(){
@@ -121,28 +125,34 @@ function toggleMenu(){
 function tryAPI(apiName){
   const endpoint = document.getElementById("endpoint-" + apiName).innerText;
   const input = document.getElementById("input-" + apiName).value || "";
+  if(!input && apiName !== 'gpt'){
+    showToast("الرجاء إدخال رابط أولاً");
+    return;
+  }
   window.open(endpoint + encodeURIComponent(input), "_blank");
 }
 
 function copyAPI(apiName){
   const endpoint = document.getElementById("endpoint-" + apiName).innerText;
   navigator.clipboard.writeText(endpoint);
-  showToast("تم النسخ");
+  showToast("✅ تم نسخ الرابط");
 }
 
 function showToast(msg){
-  const toast=document.getElementById("toast");
-  toast.innerText=msg;
-  toast.style.opacity="1";
-  setTimeout(()=>{toast.style.opacity="0";},1500);
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.style.opacity = "1";
+  setTimeout(() => { toast.style.opacity = "0"; }, 1500);
 }
 
-// profile
 let profileImage = localStorage.getItem("profileImage");
+let profileName = localStorage.getItem("profileName");
 if(profileImage){
   document.getElementById("sidebarProfile").src = profileImage;
 }
+if(profileName){
+  document.getElementById("sidebarName").innerText = profileName;
+}
 </script>
-
 </body>
 </html>
