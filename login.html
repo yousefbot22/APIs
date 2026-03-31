@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', 'Poppins', sans-serif;
 }
 
 body {
@@ -23,7 +23,6 @@ body {
   overflow: hidden;
 }
 
-/* Animated Background */
 .bg-shape {
   position: absolute;
   width: 500px;
@@ -48,22 +47,11 @@ body {
   animation-delay: -5s;
 }
 
-.shape3 {
-  background: #ff44aa;
-  top: 50%;
-  left: 50%;
-  width: 300px;
-  height: 300px;
-  opacity: 0.2;
-  animation-duration: 15s;
-}
-
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(50px, -50px) scale(1.1); }
 }
 
-/* Main Card */
 .login-container {
   position: relative;
   z-index: 10;
@@ -79,15 +67,8 @@ body {
   padding: 48px 40px;
   border: 1px solid rgba(0, 255, 170, 0.2);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s ease;
 }
 
-.login-card:hover {
-  border-color: rgba(0, 255, 170, 0.5);
-  box-shadow: 0 0 40px rgba(0, 255, 170, 0.1);
-}
-
-/* Logo */
 .logo {
   text-align: center;
   margin-bottom: 32px;
@@ -100,7 +81,6 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: -0.5px;
 }
 
 .logo p {
@@ -109,7 +89,6 @@ body {
   margin-top: 8px;
 }
 
-/* Input Groups */
 .input-group {
   margin-bottom: 24px;
 }
@@ -120,7 +99,6 @@ body {
   color: #cbd5e1;
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.5px;
 }
 
 .input-group input {
@@ -138,7 +116,6 @@ body {
 .input-group input:focus {
   border-color: #00ffaa;
   box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
-  background: rgba(20, 27, 45, 1);
 }
 
 .password-wrapper {
@@ -161,14 +138,8 @@ body {
   background: rgba(0, 255, 170, 0.1);
   padding: 5px 12px;
   border-radius: 20px;
-  transition: 0.2s;
 }
 
-.toggle-password:hover {
-  background: rgba(0, 255, 170, 0.2);
-}
-
-/* Options */
 .options {
   display: flex;
   justify-content: space-between;
@@ -195,15 +166,9 @@ body {
 .forgot {
   color: #00ffaa;
   text-decoration: none;
-  transition: 0.2s;
   cursor: pointer;
 }
 
-.forgot:hover {
-  text-shadow: 0 0 8px #00ffaa;
-}
-
-/* Login Button */
 .login-btn {
   width: 100%;
   padding: 14px;
@@ -215,8 +180,6 @@ body {
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
 }
 
 .login-btn:hover {
@@ -224,17 +187,6 @@ body {
   box-shadow: 0 10px 30px rgba(0, 255, 170, 0.3);
 }
 
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.login-btn.loading {
-  opacity: 0.7;
-  cursor: wait;
-  transform: none;
-}
-
-/* Register Link */
 .register-link {
   text-align: center;
   margin-top: 28px;
@@ -246,15 +198,9 @@ body {
   color: #00ffaa;
   text-decoration: none;
   font-weight: 600;
-  margin-left: 5px;
   cursor: pointer;
 }
 
-.register-link a:hover {
-  text-decoration: underline;
-}
-
-/* Message */
 .message {
   margin-top: 20px;
   padding: 12px;
@@ -277,30 +223,12 @@ body {
   border: 1px solid rgba(0, 255, 170, 0.3);
   display: block;
 }
-
-/* Responsive */
-@media (max-width: 480px) {
-  .login-card {
-    padding: 32px 24px;
-  }
-  
-  .logo h1 {
-    font-size: 28px;
-  }
-  
-  .options {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-}
 </style>
 </head>
 <body>
 
 <div class="bg-shape shape1"></div>
 <div class="bg-shape shape2"></div>
-<div class="bg-shape shape3"></div>
 
 <div class="login-container">
   <div class="login-card">
@@ -318,7 +246,7 @@ body {
       <label>🔒 Password</label>
       <div class="password-wrapper">
         <input type="password" id="password" placeholder="Enter your password">
-        <span class="toggle-password" id="togglePassBtn">Show</span>
+        <span class="toggle-password" onclick="togglePassword()">Show</span>
       </div>
     </div>
 
@@ -326,161 +254,107 @@ body {
       <label class="remember">
         <input type="checkbox" id="remember"> Remember me
       </label>
-      <a href="#" class="forgot" id="forgotBtn">Forgot password?</a>
+      <a class="forgot" onclick="alert('Reset link sent to your email')">Forgot password?</a>
     </div>
 
-    <button class="login-btn" id="loginBtn">Login</button>
+    <button class="login-btn" onclick="login()">Login</button>
 
     <div id="message" class="message"></div>
 
     <div class="register-link">
       Don't have an account?
-      <a href="#" id="registerBtn">Create account</a>
+      <a onclick="alert('Registration coming soon')">Create account</a>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
-// Initialize Supabase
+// Supabase Config
 const supabase = supabase.createClient(
   "https://rcxjwetrmtwxkdqdurfw.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
 );
 
-// DOM Elements
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const loginBtn = document.getElementById('loginBtn');
-const messageDiv = document.getElementById('message');
-const rememberCheckbox = document.getElementById('remember');
-const togglePassBtn = document.getElementById('togglePassBtn');
-const forgotBtn = document.getElementById('forgotBtn');
-const registerBtn = document.getElementById('registerBtn');
-
-// Toggle Password Function
+// Toggle Password
 function togglePassword() {
-  if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    togglePassBtn.textContent = 'Hide';
+  const pass = document.getElementById('password');
+  const btn = event.target;
+  if (pass.type === 'password') {
+    pass.type = 'text';
+    btn.textContent = 'Hide';
   } else {
-    passwordInput.type = 'password';
-    togglePassBtn.textContent = 'Show';
+    pass.type = 'password';
+    btn.textContent = 'Show';
   }
 }
 
-// Handle Login Function
-async function handleLogin() {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
+// Login Function
+async function login() {
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value.trim();
+  const msgDiv = document.getElementById('message');
+  const btn = event.target;
 
-  // Hide previous message
-  messageDiv.className = 'message';
-  messageDiv.style.display = 'none';
+  msgDiv.className = 'message';
+  msgDiv.style.display = 'none';
 
-  // Validation
   if (!email || !password) {
-    messageDiv.className = 'message error';
-    messageDiv.textContent = '❌ Please enter email and password';
-    messageDiv.style.display = 'block';
+    msgDiv.className = 'message error';
+    msgDiv.textContent = '❌ Please enter email and password';
+    msgDiv.style.display = 'block';
     return;
   }
 
-  // Email validation
-  const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    messageDiv.className = 'message error';
-    messageDiv.textContent = '❌ Invalid email format';
-    messageDiv.style.display = 'block';
-    return;
-  }
+  btn.textContent = 'Logging in...';
+  btn.style.opacity = '0.7';
+  btn.disabled = true;
 
-  // Loading state
-  loginBtn.classList.add('loading');
-  loginBtn.textContent = 'Logging in...';
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
 
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-
-    if (error) {
-      messageDiv.className = 'message error';
-      if (error.message.includes('Invalid login credentials')) {
-        messageDiv.textContent = '❌ Wrong email or password';
-      } else if (error.message.includes('Email not confirmed')) {
-        messageDiv.textContent = '❌ Please confirm your email first';
-      } else {
-        messageDiv.textContent = '❌ ' + error.message;
-      }
-      messageDiv.style.display = 'block';
-      loginBtn.classList.remove('loading');
-      loginBtn.textContent = 'Login';
+  if (error) {
+    msgDiv.className = 'message error';
+    msgDiv.textContent = '❌ ' + (error.message === 'Invalid login credentials' ? 'Wrong email or password' : error.message);
+    msgDiv.style.display = 'block';
+    btn.textContent = 'Login';
+    btn.style.opacity = '1';
+    btn.disabled = false;
+  } else {
+    localStorage.setItem('user', 'true');
+    localStorage.setItem('email', email);
+    
+    if (document.getElementById('remember').checked) {
+      localStorage.setItem('rememberEmail', email);
     } else {
-      // Save session
-      localStorage.setItem('user', 'true');
-      localStorage.setItem('email', email);
-      
-      if (rememberCheckbox.checked) {
-        localStorage.setItem('rememberEmail', email);
-      } else {
-        localStorage.removeItem('rememberEmail');
-      }
-
-      messageDiv.className = 'message success';
-      messageDiv.textContent = '✅ Login successful! Redirecting...';
-      messageDiv.style.display = 'block';
-
-      // Redirect to loading page
-      setTimeout(() => {
-        window.location.href = 'loading.html';
-      }, 1200);
+      localStorage.removeItem('rememberEmail');
     }
-  } catch (err) {
-    messageDiv.className = 'message error';
-    messageDiv.textContent = '❌ Something went wrong. Try again.';
-    messageDiv.style.display = 'block';
-    loginBtn.classList.remove('loading');
-    loginBtn.textContent = 'Login';
+
+    msgDiv.className = 'message success';
+    msgDiv.textContent = '✅ Login successful! Redirecting...';
+    msgDiv.style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = 'loading.html';
+    }, 1200);
   }
 }
 
-// Forgot Password
-function handleForgot() {
-  alert('📧 Password reset link will be sent to your email address');
+// Load saved email
+const savedEmail = localStorage.getItem('rememberEmail');
+if (savedEmail) {
+  document.getElementById('email').value = savedEmail;
+  document.getElementById('remember').checked = true;
 }
-
-// Register
-function handleRegister() {
-  alert('📝 Registration page coming soon!');
-}
-
-// Load remembered email
-function loadRememberedEmail() {
-  const savedEmail = localStorage.getItem('rememberEmail');
-  if (savedEmail) {
-    emailInput.value = savedEmail;
-    rememberCheckbox.checked = true;
-  }
-}
-
-// Add Event Listeners
-loginBtn.addEventListener('click', handleLogin);
-togglePassBtn.addEventListener('click', togglePassword);
-forgotBtn.addEventListener('click', handleForgot);
-registerBtn.addEventListener('click', handleRegister);
 
 // Enter key support
-passwordInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') handleLogin();
+document.getElementById('password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    login();
+  }
 });
-emailInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') handleLogin();
-});
-
-// Load saved data on page load
-window.addEventListener('DOMContentLoaded', loadRememberedEmail);
 </script>
 </body>
 </html>
