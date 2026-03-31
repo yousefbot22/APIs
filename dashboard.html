@@ -1,670 +1,113 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>TOJI APIs |下一代开发平台</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', 'Cairo', sans-serif;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOJI APIs - الرئيسية</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Tahoma,sans-serif;}
+body{background:#010214;color:white;overflow-x:hidden;}
+body::before,body::after{
+  content:"";position:fixed;width:400px;height:400px;filter:blur(80px);opacity:.3;pointer-events:none;
+}
+body::before{top:-150px;left:-150px;background:radial-gradient(circle,#4f46e5,#010214);}
+body::after{bottom:-150px;right:-150px;background:radial-gradient(circle,#22c55e,#010214);}
 
-    body {
-      background: #010314;
-      color: #f1f5f9;
-      overflow-x: hidden;
-      font-size: 15px;
-      scroll-behavior: smooth;
-    }
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:rgba(2,6,23,.8);backdrop-filter:blur(8px);border-bottom:1px solid #1f2937;position:fixed;width:100%;top:0;z-index:15;}
+.logo{font-size:20px;font-weight:bold;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;}
+.menu-btn{font-size:24px;cursor:pointer;}
 
-    /* 高级动态渐变背景 */
-    .bg-aura {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      z-index: -2;
-      background: radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.2), transparent 55%),
-                  radial-gradient(circle at 85% 70%, rgba(34, 197, 94, 0.18), transparent 60%),
-                  linear-gradient(145deg, #020617 0%, #000000 100%);
-    }
+.sidebar{position:fixed;top:0;right:-260px;width:220px;height:100%;background:#010214;border-left:1px solid #1f2937;padding:20px;transition:.4s;z-index:10;}
+.sidebar.active{right:0;}
+.sidebar-header{text-align:center;margin-bottom:20px;}
+.sidebar-header img{width:60px;height:60px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:8px;object-fit:cover;}
+.sidebar-header h3{font-size:14px;color:#9ca3af;}
+.menu a{display:flex;align-items:center;gap:8px;padding:10px;margin-bottom:8px;border-radius:10px;text-decoration:none;color:#9ca3af;transition:.25s;font-size:13px;direction:rtl;}
+.menu a.active{background:linear-gradient(90deg,#4f46e5,#22c55e);color:white;}
+.menu a:hover{background:#0f172a;color:white;}
 
-    .bg-aura::before {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" opacity="0.2"><path fill="none" stroke="%234f46e5" stroke-width="0.5" d="M769 229L1037 260.9M927 880L731 737 520 660 309 738 112 839 52 536 243 313 437 272 639 295 793 422 892 616 850 816"/><circle cx="400" cy="400" r="60" stroke="%2322c55e" stroke-width="0.6" fill="none"/></svg>');
-      background-repeat: repeat;
-      background-size: 180px;
-      opacity: 0.2;
-      pointer-events: none;
-    }
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.4);backdrop-filter:blur(2px);opacity:0;visibility:hidden;transition:.3s;z-index:5;}
+.overlay.active{opacity:1;visibility:visible;}
 
-    /* 毛玻璃顶栏升级 */
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 24px;
-      background: rgba(1, 3, 20, 0.75);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(79, 70, 229, 0.3);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      transition: all 0.2s;
-    }
-
-    .logo {
-      font-size: 1.7rem;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      background: linear-gradient(135deg, #a855f7, #3b82f6, #22c55e);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 8px rgba(34,197,94,0.2);
-    }
-
-    .menu-btn {
-      font-size: 28px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.05);
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 30px;
-      transition: 0.2s;
-      backdrop-filter: blur(4px);
-    }
-    .menu-btn:hover { background: rgba(79,70,229,0.4); transform: scale(0.96);}
-
-    /* SIDEBAR 更现代 */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      right: -280px;
-      width: 280px;
-      height: 100%;
-      background: rgba(2, 6, 23, 0.96);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(79,70,229,0.5);
-      padding: 28px 16px;
-      transition: 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      z-index: 30;
-      box-shadow: -8px 0 32px rgba(0,0,0,0.6);
-    }
-    .sidebar.active { right: 0; }
-
-    .sidebar-header {
-      text-align: center;
-      margin-bottom: 32px;
-      padding-bottom: 16px;
-      border-bottom: 1px dashed #334155;
-    }
-    .sidebar-header img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 2.5px solid #22c55e;
-      object-fit: cover;
-      box-shadow: 0 8px 20px rgba(34,197,94,0.3);
-      transition: 0.2s;
-    }
-    .sidebar-header h3 {
-      font-size: 1.25rem;
-      margin-top: 12px;
-      background: linear-gradient(120deg,#e2e8f0,#94a3b8);
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .sidebar-header p {
-      font-size: 12px;
-      color: #5b6e8c;
-    }
-
-    .menu a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 16px;
-      margin-bottom: 12px;
-      border-radius: 18px;
-      text-decoration: none;
-      color: #cbd5e6;
-      font-weight: 500;
-      transition: all 0.25s;
-      background: rgba(15,23,42,0.4);
-      backdrop-filter: blur(4px);
-      border: 1px solid transparent;
-    }
-    .menu a span { font-size: 1.3rem; }
-    .menu a.active {
-      background: linear-gradient(95deg, #4f46e5, #22c55e);
-      color: white;
-      box-shadow: 0 6px 14px rgba(79,70,229,0.3);
-      border: none;
-    }
-    .menu a:hover:not(.active) {
-      background: #1e293b;
-      color: white;
-      transform: translateX(-5px);
-      border-color: #4f46e5;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(3px);
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.25s;
-      z-index: 25;
-    }
-    .overlay.active { opacity: 1; visibility: visible; }
-
-    /* 主内容动画 */
-    .hero {
-      padding: 28px 20px 10px 20px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-    .hero-card {
-      background: rgba(12, 20, 35, 0.65);
-      backdrop-filter: blur(14px);
-      border-radius: 2rem;
-      border: 1px solid rgba(79,70,229,0.35);
-      padding: 28px 24px;
-      text-align: center;
-      transition: 0.4s;
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.4);
-    }
-    .hero-card img {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      border: 3px solid #22c55e;
-      margin-bottom: 16px;
-      transition: 0.2s;
-    }
-    .hero-card h1 {
-      font-size: 2.2rem;
-      background: linear-gradient(135deg, #c084fc, #3b82f6, #4ade80);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 12px;
-    }
-    .hero-card p {
-      color: #a0afc3;
-      max-width: 550px;
-      margin: 0 auto 20px auto;
-      line-height: 1.5;
-    }
-    .btn-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin: 16px 0 20px;
-    }
-    .btn {
-      padding: 10px 26px;
-      border: none;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      letter-spacing: 0.3px;
-    }
-    .primary {
-      background: linear-gradient(105deg, #6366f1, #22c55e);
-      color: white;
-      box-shadow: 0 4px 12px rgba(34,197,94,0.3);
-    }
-    .secondary {
-      background: rgba(2,6,23,0.7);
-      backdrop-filter: blur(8px);
-      border: 1px solid #475569;
-      color: #e2e8f0;
-    }
-    .btn:hover { transform: translateY(-2px) scale(1.02); }
-    .primary:hover { box-shadow: 0 10px 20px -5px #22c55e70; }
-
-    /* stats 卡片更活力 */
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 36px;
-      flex-wrap: wrap;
-      margin-top: 28px;
-    }
-    .stat {
-      background: rgba(0,0,0,0.3);
-      padding: 8px 20px;
-      border-radius: 60px;
-      backdrop-filter: blur(4px);
-      min-width: 100px;
-      transition: 0.2s;
-    }
-    .stat h2 {
-      font-size: 1.9rem;
-      font-weight: 800;
-      background: linear-gradient(145deg, #f0f9ff, #86efac);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .stat span {
-      font-size: 0.8rem;
-      color: #9ca9c3;
-      font-weight: 500;
-    }
-
-    /* 特性卡片 + 动态入场 */
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      padding: 20px 20px 40px;
-      max-width: 1280px;
-      margin: 0 auto;
-    }
-    .card {
-      background: rgba(15, 25, 45, 0.6);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(79, 70, 229, 0.3);
-      border-radius: 1.75rem;
-      padding: 28px 18px;
-      text-align: center;
-      transition: all 0.35s;
-      cursor: default;
-    }
-    .card:hover {
-      transform: translateY(-6px);
-      border-color: #4f46e5;
-      background: rgba(79,70,229,0.1);
-      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
-    }
-    .card h3 {
-      font-size: 1.45rem;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .card p {
-      color: #9bb2d0;
-      line-height: 1.45;
-    }
-
-    /* 底部 & 玻璃拟态 */
-    .footer-note {
-      text-align: center;
-      padding: 25px 20px 40px;
-      font-size: 0.8rem;
-      color: #5b6f91;
-      border-top: 1px solid rgba(79,70,229,0.2);
-      margin-top: 20px;
-    }
-
-    /* 滚动条 */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #4f46e5; border-radius: 12px; }
-
-    /* 入场动画 */
-    @keyframes floatUp {
-      0% { opacity: 0; transform: translateY(20px);}
-      100% { opacity: 1; transform: translateY(0);}
-    }
-    .hero-card, .card, .stat {
-      animation: floatUp 0.6s ease forwards;
-      opacity: 0;
-    }
-    .hero-card { animation-delay: 0.1s; }
-    .card:nth-child(1) { animation-delay: 0.3s; }
-    .card:nth-child(2) { animation-delay: 0.45s; }
-    .card:nth-child(3) { animation-delay: 0.6s; }
-    .stat:nth-child(1) { animation-delay: 0.2s; }
-    .stat:nth-child(2) { animation-delay: 0.35s; }
-    .stat:nth-child(3) { animation-delay: 0.5s; }
-
-    /* 响应式优化 */
-    @media (max-width: 550px) {
-      .hero-card h1 { font-size: 1.6rem; }
-      .btn { padding: 8px 20px; font-size: 0.8rem;}
-      .stats { gap: 16px; }
-    }
-  </style>
+.container{padding:80px 20px 20px 20px;max-width:900px;margin:auto;}
+.hero-card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:24px;padding:30px;text-align:center;margin-bottom:30px;}
+.hero-card img{width:80px;height:80px;border-radius:50%;border:2px solid #4f46e5;margin-bottom:15px;}
+.hero-card h1{font-size:32px;background:linear-gradient(90deg,#4f46e5,#22c55e);-webkit-background-clip:text;color:transparent;margin-bottom:10px;}
+.hero-card p{color:#9ca3af;margin-bottom:20px;}
+.stats{display:flex;justify-content:center;gap:30px;margin-top:20px;}
+.stat{text-align:center;}
+.stat h2{font-size:28px;background:linear-gradient(90deg,#60a5fa,#22c55e);-webkit-background-clip:text;color:transparent;}
+.stat span{font-size:12px;color:#9ca3af;}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:20px;}
+.card{background:linear-gradient(145deg,#0f172a,#010214);border:1px solid #1f2937;border-radius:16px;padding:20px;text-align:center;transition:.3s;}
+.card:hover{transform:translateY(-5px);border-color:#4f46e5;}
+.card h3{margin-bottom:10px;color:#e2e8f0;}
+.card p{color:#9ca3af;font-size:13px;}
+.btn{padding:10px 24px;border:none;border-radius:10px;cursor:pointer;font-weight:bold;transition:.3s;margin:0 5px;}
+.primary{background:linear-gradient(90deg,#6366f1,#22c55e);color:white;}
+.secondary{background:#010214;border:1px solid #1f2937;color:#9ca3af;}
+.btn:hover{transform:scale(1.05);}
+</style>
 </head>
 <body>
-<div class="bg-aura"></div>
 
 <div class="topbar">
-  <div class="logo">⚡ TOJI APIs</div>
-  <div class="menu-btn" id="menuToggleBtn">☯</div>
+  <div class="logo">TOJI APIs</div>
+  <div class="menu-btn" onclick="toggleMenu()">☰</div>
 </div>
 
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <img id="sidebarProfileImg" src="https://i.imgur.com/2DhmtJ4.png" alt="avatar">
-    <h3 id="sidebarUserName">TOJI Dev</h3>
-    <p>✨ API 先锋</p>
+    <img id="sidebarProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h3 id="sidebarName">TOJI Dev</h3>
   </div>
   <div class="menu">
-    <a href="#" class="active" data-page="dashboard"><span>🏠</span> الرئيسية</a>
-    <a href="#" data-page="apis"><span>⚡</span> الواجهات</a>
-    <a href="#" data-page="owner"><span>📬</span> المطور</a>
-    <a href="#" data-page="profile"><span>🛠️</span> الملف الشخصي</a>
+    <a href="dashboard.html" class="active">🏠 لوحة التحكم</a>
+    <a href="apis.html">🛠️ APIs</a>
+    <a href="owner.html">📞 تواصل مع المطور</a>
+    <a href="profile.html">👤 الملف الشخصي</a>
+  </div>
+</div>
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+<div class="container">
+  <div class="hero-card">
+    <img id="heroProfile" src="https://i.imgur.com/2DhmtJ4.png">
+    <h1>TOJI APIs</h1>
+    <p>منصة متكاملة لواجهات البرمجة - واجهات قوية وسريعة لتطوير تطبيقاتك</p>
+    <div>
+      <button class="btn primary" onclick="location.href='apis.html'">استكشف APIs</button>
+      <button class="btn secondary" onclick="location.href='owner.html'">تواصل معنا</button>
+    </div>
+    <div class="stats">
+      <div class="stat"><h2 id="statApis">3</h2><span>واجهات برمجة</span></div>
+      <div class="stat"><h2 id="statActive">3</h2><span>نشطة</span></div>
+      <div class="stat"><h2 id="statUsers">100+</h2><span>مطور</span></div>
+    </div>
+  </div>
+  
+  <div class="features">
+    <div class="card"><h3>⚡ سرعة فائقة</h3><p>استجابة سريعة جداً مع أداء ممتاز</p></div>
+    <div class="card"><h3>🔒 أمان متقدم</h3><p>حماية كاملة للبيانات والطلبات</p></div>
+    <div class="card"><h3>📚 توثيق شامل</h3><p>شرح وافي مع أمثلة عملية</p></div>
   </div>
 </div>
 
-<div id="overlay" class="overlay"></div>
-
-<main id="app-root">
-  <!-- Dashboard content will be dynamically injected but we keep base structure -->
-  <div class="hero" id="hero-section">
-    <div class="hero-card">
-      <img id="heroAvatar" src="https://i.imgur.com/2DhmtJ4.png" alt="toji">
-      <h1>TOJI APIs</h1>
-      <p>下一代轻量级 API 网关 —— 高速、安全、为现代开发者而生。集成 AI 就绪，毫秒级响应。</p>
-      <div class="btn-group">
-        <button class="btn primary" id="exploreApisBtn">🚀 استكشف الواجهات</button>
-        <button class="btn secondary" id="contactDevBtn">📢 تواصل مع المطور</button>
-      </div>
-      <div class="stats">
-        <div class="stat"><h2 id="statApis">4</h2><span>واجهة برمجة</span></div>
-        <div class="stat"><h2 id="statActive">3</h2><span>نشطة الآن</span></div>
-        <div class="stat"><h2 id="statUsers">128</h2><span>مطور +</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="features">
-    <div class="card"><h3>⚡ <span>استجابة خاطفة</span></h3><p>متوسط زمن استجابة أقل من 90ms مع دعم websocket</p></div>
-    <div class="card"><h3>🔐 <span>أمان متقدم</span></h3><p>مصادقة JWT + AES-256 ، حماية من الهجمات</p></div>
-    <div class="card"><h3>📘 <span>توثيق تفاعلي</span></h3><p>شروحات كاملة، نماذج أكواد بأكثر من 5 لغات برمجية</p></div>
-  </div>
-  <div class="footer-note">
-    <span>✨ TOJI APIs — حيث تلتقي الكفاءة بالإبداع | v2.0</span>
-  </div>
-</main>
-
 <script>
-  // Enhanced interactive + profile + dynamic menu + localstorage sync
-  (function() {
-    // ---------- DOM Elements ----------
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const menuBtn = document.getElementById('menuToggleBtn');
-    const sidebarProfileImg = document.getElementById('sidebarProfileImg');
-    const heroAvatar = document.getElementById('heroAvatar');
-    const sidebarUserName = document.getElementById('sidebarUserName');
-    const exploreBtn = document.getElementById('exploreApisBtn');
-    const contactBtn = document.getElementById('contactDevBtn');
-    
-    // Stats dynamic elements (optional cool counters)
-    const statApisEl = document.getElementById('statApis');
-    const statActiveEl = document.getElementById('statActive');
-    const statUsersEl = document.getElementById('statUsers');
-    
-    // 菜单项
-    const menuLinks = document.querySelectorAll('.menu a');
-    
-    // ---------- 模拟动态数据 (展示高级感) ----------
-    let profileData = {
-      name: "TOJI Dev",
-      avatar: "https://i.imgur.com/2DhmtJ4.png",
-      email: "toji@apis.dev"
-    };
-    
-    // 加载本地存储中的个性化数据
-    function loadLocalProfile() {
-      const savedName = localStorage.getItem("toji_username");
-      const savedAvatar = localStorage.getItem("toji_avatar");
-      if (savedName) profileData.name = savedName;
-      if (savedAvatar && (savedAvatar.startsWith('http') || savedAvatar.startsWith('data:'))) {
-        profileData.avatar = savedAvatar;
-      }
-      updateProfileUI();
-    }
-    
-    function updateProfileUI() {
-      sidebarProfileImg.src = profileData.avatar;
-      heroAvatar.src = profileData.avatar;
-      sidebarUserName.innerText = profileData.name;
-      // also if there is any dynamic name in hero-card we can add optional
-      const heroTitle = document.querySelector('.hero-card h1');
-      if (heroTitle && profileData.name !== "TOJI Dev") {
-        // optional but keep brand
-      }
-    }
-    
-    // 保存配置 (profile page would call this)
-    window.saveProfileSettings = function(name, avatarUrl) {
-      if (name && name.trim() !== "") profileData.name = name.trim();
-      if (avatarUrl && (avatarUrl.startsWith('http') || avatarUrl.startsWith('data:'))) profileData.avatar = avatarUrl;
-      localStorage.setItem("toji_username", profileData.name);
-      localStorage.setItem("toji_avatar", profileData.avatar);
-      updateProfileUI();
-      // 显示通知
-      showToast("✅ تم تحديث الملف الشخصي بنجاح");
-    };
-    
-    // 小提示
-    function showToast(msg) {
-      let toast = document.createElement('div');
-      toast.innerText = msg;
-      toast.style.position = 'fixed';
-      toast.style.bottom = '20px';
-      toast.style.left = '50%';
-      toast.style.transform = 'translateX(-50%)';
-      toast.style.backgroundColor = '#1e293b';
-      toast.style.color = '#e2e8f0';
-      toast.style.padding = '12px 24px';
-      toast.style.borderRadius = '40px';
-      toast.style.zIndex = '999';
-      toast.style.backdropFilter = 'blur(12px)';
-      toast.style.border = '1px solid #22c55e';
-      toast.style.fontWeight = '500';
-      toast.style.fontSize = '0.85rem';
-      document.body.appendChild(toast);
-      setTimeout(() => { toast.style.opacity = '0'; setTimeout(()=>toast.remove(),400); }, 2200);
-    }
-    
-    // 统计数字动态更新 (优雅)
-    let apiStats = { total: 4, active: 3, developers: 128 };
-    function animateStats() {
-      if (statApisEl) animateNumber(statApisEl, 1, apiStats.total, 800);
-      if (statActiveEl) animateNumber(statActiveEl, 1, apiStats.active, 700);
-      if (statUsersEl) animateNumber(statUsersEl, 12, apiStats.developers, 1000);
-    }
-    function animateNumber(element, start, end, duration) {
-      let startTime = null;
-      const step = (timestamp) => {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min(1, (timestamp - startTime) / duration);
-        const current = Math.floor(progress * (end - start) + start);
-        element.innerText = current;
-        if (progress < 1) requestAnimationFrame(step);
-        else element.innerText = end;
-      };
-      requestAnimationFrame(step);
-    }
-    
-    // 侧边栏控制
-    function toggleMenu() {
-      sidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-      document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-    }
-    menuBtn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
-    
-    // 菜单路由系统 (单页模拟)
-    function setActiveMenuItem(pageId) {
-      menuLinks.forEach(link => {
-        const page = link.getAttribute('data-page');
-        if (page === pageId) link.classList.add('active');
-        else link.classList.remove('active');
-      });
-    }
-    
-    // 内容渲染器 (模拟页面切换，提升交互)
-    function renderPage(page) {
-      const mainRoot = document.getElementById('app-root');
-      if (!mainRoot) return;
-      if (page === 'dashboard') {
-        // 恢复原始dom结构 (简单重建)
-        mainRoot.innerHTML = `
-          <div class="hero">
-            <div class="hero-card">
-              <img id="heroAvatar" src="${profileData.avatar}">
-              <h1>TOJI APIs</h1>
-              <p>下一代轻量级 API 网关 —— 高速、安全、为现代开发者而生。集成 AI 就绪，毫秒级响应。</p>
-              <div class="btn-group">
-                <button class="btn primary" id="exploreApisBtn">🚀 استكشف الواجهات</button>
-                <button class="btn secondary" id="contactDevBtn">📢 تواصل مع المطور</button>
-              </div>
-              <div class="stats">
-                <div class="stat"><h2 id="statApis">4</h2><span>واجهة برمجة</span></div>
-                <div class="stat"><h2 id="statActive">3</h2><span>نشطة الآن</span></div>
-                <div class="stat"><h2 id="statUsers">128</h2><span>مطور +</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="features">
-            <div class="card"><h3>⚡ <span>استجابة خاطفة</span></h3><p>متوسط زمن استجابة أقل من 90ms مع دعم websocket</p></div>
-            <div class="card"><h3>🔐 <span>أمان متقدم</span></h3><p>مصادقة JWT + AES-256 ، حماية من الهجمات</p></div>
-            <div class="card"><h3>📘 <span>توثيق تفاعلي</span></h3><p>شروحات كاملة، نماذج أكواد بأكثر من 5 لغات برمجية</p></div>
-          </div>
-          <div class="footer-note"><span>✨ TOJI APIs — حيث تلتقي الكفاءة بالإبداع | v2.0</span></div>
-        `;
-        // 重新绑定头像ID和新按钮事件
-        const newHeroAvatar = document.getElementById('heroAvatar');
-        if(newHeroAvatar) newHeroAvatar.src = profileData.avatar;
-        document.getElementById('exploreApisBtn')?.addEventListener('click', () => renderPage('apis'));
-        document.getElementById('contactDevBtn')?.addEventListener('click', () => renderPage('owner'));
-        animateStats();
-      } 
-      else if (page === 'apis') {
-        mainRoot.innerHTML = `
-          <div style="padding: 32px 20px; max-width: 1100px; margin: 0 auto;">
-            <div class="hero-card" style="text-align:center; margin-bottom: 30px;">
-              <h2>⚡ مكتبة الـ APIs</h2>
-              <p>استعد لتجربة واجهات متطورة: توثيق، مفاتيح تجريبية، سرعة فائقة</p>
-            </div>
-            <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(280px,1fr));">
-              <div class="card"><h3>📡 Toji AI</h3><p>تحليل النصوص والصور بذكاء اصطناعي، استجابة فورية.</p><button class="btn primary" style="margin-top:16px;" onclick="showToast('قريباً تجربة مجانية')">体验</button></div>
-              <div class="card"><h3>💸 تحويل العملات</h3><p>أسعار لحظية لأكثر من 160 عملة رقمية وتقليدية.</p><button class="btn secondary" style="margin-top:16px;" onclick="showToast('API يعمل بكفاءة 99.9%')">وثيقة</button></div>
-              <div class="card"><h3>📧 ذكاء البريد</h3><p>تحليل محتوى البريد الإلكتروني واكتشاف الاحتيال.</p><button class="btn primary" style="margin-top:16px;" onclick="showToast('جاهز للدمج')">API Key</button></div>
-              <div class="card"><h3>🌍 الترجمة العصبية</h3><p>ترجم فورية بـ 50 لغة، دقة استثنائية.</p><button class="btn secondary" style="margin-top:16px;" onclick="showToast('قريباً النسخة التجريبية')">قريباً</button></div>
-            </div>
-          </div>
-          <div class="footer-note">✨ جميع الواجهات تدعم REST & GraphQL</div>
-        `;
-      } 
-      else if (page === 'owner') {
-        mainRoot.innerHTML = `
-          <div style="padding: 40px 20px; max-width: 650px; margin: 0 auto;">
-            <div class="hero-card" style="text-align:center;">
-              <img src="${profileData.avatar}" style="width:100px; height:100px; border-radius:50%; margin-bottom:16px;">
-              <h2>${profileData.name}</h2>
-              <p style="margin:8px 0">مطور رئيسي ومؤسس TOJI APIs</p>
-              <div style="background:#0f172a70; border-radius: 32px; padding: 18px; margin: 20px 0;">
-                <span>📧 toji@apis.dev</span><br>
-                <span>💬 دعم فني على مدار الساعة</span><br>
-                <span>🔗 github.com/toji-apis</span>
-              </div>
-              <button class="btn primary" id="copyContactBtn" onclick="navigator.clipboard.writeText('toji@apis.dev'); showToast('تم نسخ البريد الإلكتروني')">📧 نسخ البريد</button>
-              <button class="btn secondary" id="backHomeBtn" style="margin-right:12px;">🏠 العودة</button>
-            </div>
-          </div>
-        `;
-        document.getElementById('backHomeBtn')?.addEventListener('click', () => renderPage('dashboard'));
-      } 
-      else if (page === 'profile') {
-        mainRoot.innerHTML = `
-          <div style="padding: 30px 20px; max-width: 550px; margin: 0 auto;">
-            <div class="hero-card">
-              <h2>🛠️ الملف الشخصي</h2>
-              <div style="text-align:center; margin: 20px 0;">
-                <img id="profilePreview" src="${profileData.avatar}" style="width:90px; border-radius:50%; border:2px solid #22c55e;">
-              </div>
-              <label style="display:block; margin-top:16px;">👤 اسم المستخدم</label>
-              <input type="text" id="profileNameInput" value="${profileData.name}" style="width:100%; padding:12px; border-radius:28px; background:#0f172a; border:1px solid #334155; color:white; margin-bottom:16px;">
-              <label>🖼️ رابط الصورة (URL)</label>
-              <input type="text" id="profileAvatarInput" value="${profileData.avatar}" style="width:100%; padding:12px; border-radius:28px; background:#0f172a; border:1px solid #334155; color:white; margin-bottom:24px;">
-              <button class="btn primary" id="saveProfileBtn">💾 حفظ التغييرات</button>
-              <button class="btn secondary" id="profileBackBtn" style="margin-top:12px;">🔙 رجوع</button>
-            </div>
-          </div>
-        `;
-        document.getElementById('saveProfileBtn')?.addEventListener('click', () => {
-          const newName = document.getElementById('profileNameInput').value;
-          const newAvatar = document.getElementById('profileAvatarInput').value;
-          if(newName) window.saveProfileSettings(newName, newAvatar);
-          setTimeout(() => renderPage('dashboard'), 650);
-        });
-        document.getElementById('profileBackBtn')?.addEventListener('click', () => renderPage('dashboard'));
-      }
-      // 重新绑定全局头像引用并更新显示
-      const newHeroAvatarAfter = document.getElementById('heroAvatar');
-      if(newHeroAvatarAfter && page === 'dashboard') newHeroAvatarAfter.src = profileData.avatar;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    // 菜单点击事件
-    menuLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const page = link.getAttribute('data-page');
-        if (page) {
-          renderPage(page);
-          setActiveMenuItem(page);
-          toggleMenu(); // 关闭侧边栏提高体验
-        }
-      });
-    });
-    
-    // 首页按钮事件委托 (动态监听)
-    document.addEventListener('click', (e) => {
-      if (e.target.id === 'exploreApisBtn' || e.target.closest('#exploreApisBtn')) {
-        renderPage('apis');
-        setActiveMenuItem('apis');
-        if(sidebar.classList.contains('active')) toggleMenu();
-      }
-      if (e.target.id === 'contactDevBtn' || e.target.closest('#contactDevBtn')) {
-        renderPage('owner');
-        setActiveMenuItem('owner');
-        if(sidebar.classList.contains('active')) toggleMenu();
-      }
-    });
-    
-    // 初始化
-    loadLocalProfile();
-    animateStats();
-    // 让当前激活菜单高亮dashboard
-    setActiveMenuItem('dashboard');
-    // 确保hero头像同步
-    const initHero = document.getElementById('heroAvatar');
-    if(initHero) initHero.src = profileData.avatar;
-  })();
+function toggleMenu(){
+  document.getElementById("sidebar").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+let profileImage = localStorage.getItem("profileImage");
+let profileName = localStorage.getItem("profileName");
+if(profileImage){
+  document.getElementById("sidebarProfile").src = profileImage;
+  document.getElementById("heroProfile").src = profileImage;
+}
+if(profileName){
+  document.getElementById("sidebarName").innerText = profileName;
+}
 </script>
 </body>
 </html>
