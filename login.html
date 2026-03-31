@@ -146,7 +146,7 @@ body {
 }
 
 .password-wrapper input {
-  padding-right: 50px;
+  padding-right: 70px;
 }
 
 .toggle-password {
@@ -159,7 +159,7 @@ body {
   font-size: 12px;
   font-weight: 600;
   background: rgba(0, 255, 170, 0.1);
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   transition: 0.2s;
 }
@@ -196,6 +196,7 @@ body {
   color: #00ffaa;
   text-decoration: none;
   transition: 0.2s;
+  cursor: pointer;
 }
 
 .forgot:hover {
@@ -246,6 +247,7 @@ body {
   text-decoration: none;
   font-weight: 600;
   margin-left: 5px;
+  cursor: pointer;
 }
 
 .register-link a:hover {
@@ -316,7 +318,7 @@ body {
       <label>🔒 Password</label>
       <div class="password-wrapper">
         <input type="password" id="password" placeholder="Enter your password">
-        <span class="toggle-password" onclick="togglePassword()">Show</span>
+        <span class="toggle-password" id="togglePassBtn">Show</span>
       </div>
     </div>
 
@@ -324,44 +326,53 @@ body {
       <label class="remember">
         <input type="checkbox" id="remember"> Remember me
       </label>
-      <a href="#" class="forgot" onclick="alert('Reset link sent to your email')">Forgot password?</a>
+      <a href="#" class="forgot" id="forgotBtn">Forgot password?</a>
     </div>
 
-    <button class="login-btn" id="loginBtn" onclick="handleLogin()">Login</button>
+    <button class="login-btn" id="loginBtn">Login</button>
 
     <div id="message" class="message"></div>
 
     <div class="register-link">
       Don't have an account?
-      <a href="#" onclick="alert('Registration coming soon')">Create account</a>
+      <a href="#" id="registerBtn">Create account</a>
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
+// Initialize Supabase
 const supabase = supabase.createClient(
   "https://rcxjwetrmtwxkdqdurfw.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
 );
 
+// DOM Elements
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginBtn = document.getElementById('loginBtn');
+const messageDiv = document.getElementById('message');
+const rememberCheckbox = document.getElementById('remember');
+const togglePassBtn = document.getElementById('togglePassBtn');
+const forgotBtn = document.getElementById('forgotBtn');
+const registerBtn = document.getElementById('registerBtn');
+
+// Toggle Password Function
 function togglePassword() {
-  const pass = document.getElementById('password');
-  const toggle = document.querySelector('.toggle-password');
-  if (pass.type === 'password') {
-    pass.type = 'text';
-    toggle.textContent = 'Hide';
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    togglePassBtn.textContent = 'Hide';
   } else {
-    pass.type = 'password';
-    toggle.textContent = 'Show';
+    passwordInput.type = 'password';
+    togglePassBtn.textContent = 'Show';
   }
 }
 
+// Handle Login Function
 async function handleLogin() {
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value.trim();
-  const messageDiv = document.getElementById('message');
-  const loginBtn = document.getElementById('loginBtn');
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
 
   // Hide previous message
   messageDiv.className = 'message';
@@ -411,7 +422,7 @@ async function handleLogin() {
       localStorage.setItem('user', 'true');
       localStorage.setItem('email', email);
       
-      if (document.getElementById('remember').checked) {
+      if (rememberCheckbox.checked) {
         localStorage.setItem('rememberEmail', email);
       } else {
         localStorage.removeItem('rememberEmail');
@@ -435,22 +446,41 @@ async function handleLogin() {
   }
 }
 
+// Forgot Password
+function handleForgot() {
+  alert('📧 Password reset link will be sent to your email address');
+}
+
+// Register
+function handleRegister() {
+  alert('📝 Registration page coming soon!');
+}
+
 // Load remembered email
-window.onload = () => {
+function loadRememberedEmail() {
   const savedEmail = localStorage.getItem('rememberEmail');
   if (savedEmail) {
-    document.getElementById('email').value = savedEmail;
-    document.getElementById('remember').checked = true;
+    emailInput.value = savedEmail;
+    rememberCheckbox.checked = true;
   }
-};
+}
+
+// Add Event Listeners
+loginBtn.addEventListener('click', handleLogin);
+togglePassBtn.addEventListener('click', togglePassword);
+forgotBtn.addEventListener('click', handleForgot);
+registerBtn.addEventListener('click', handleRegister);
 
 // Enter key support
-document.getElementById('password').addEventListener('keypress', (e) => {
+passwordInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') handleLogin();
 });
-document.getElementById('email').addEventListener('keypress', (e) => {
+emailInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') handleLogin();
 });
+
+// Load saved data on page load
+window.addEventListener('DOMContentLoaded', loadRememberedEmail);
 </script>
 </body>
 </html>
