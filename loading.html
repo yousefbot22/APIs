@@ -1,172 +1,212 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Loading</title>
-
+<title>جاري التحميل | TOJI APIs</title>
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Consolas,monospace;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', 'Poppins', sans-serif;
 }
 
-/* body */
-
-body{
-
-height:100vh;
-background:#05070d;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-color:#00ffaa;
-overflow:hidden;
-
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0c1a 0%, #010214 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-/* matrix background */
-
-canvas{
-
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-
+/* Animated Background Circles */
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79,70,229,0.3), transparent);
+  animation: float 8s ease-in-out infinite;
 }
 
-/* loader circle */
+.circle1 { width: 400px; height: 400px; top: -150px; left: -150px; }
+.circle2 { width: 500px; height: 500px; bottom: -200px; right: -150px; animation-delay: -3s; }
+.circle3 { width: 250px; height: 250px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-duration: 5s; }
 
-.loader{
-
-width:70px;
-height:70px;
-
-border:4px solid rgba(0,255,170,0.15);
-border-top:4px solid #00ffaa;
-
-border-radius:50%;
-
-animation:spin 1s linear infinite;
-
-z-index:2;
-
-margin-bottom:25px;
-
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-30px) scale(1.1); opacity: 0.5; }
 }
 
-@keyframes spin{
-
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-
+/* Main Container */
+.loader-container {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 40px;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 40px;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  animation: fadeInScale 0.5s ease;
 }
 
-/* loading text */
-
-.loading-text{
-
-z-index:2;
-font-size:20px;
-letter-spacing:2px;
-
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
+/* Animated Logo */
+.logo {
+  font-size: 48px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #4f46e5, #22c55e, #06b6d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
+  animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(79,70,229,0.3); }
+  50% { text-shadow: 0 0 40px rgba(34,197,94,0.5); }
+}
+
+/* Modern Loader */
+.loader {
+  width: 80px;
+  height: 80px;
+  margin: 30px auto;
+  position: relative;
+}
+
+.loader::before,
+.loader::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loader::before {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4f46e5, #22c55e);
+  box-shadow: 0 0 30px rgba(79,70,229,0.5);
+}
+
+.loader::after {
+  width: 70%;
+  height: 70%;
+  background: #010214;
+  top: 15%;
+  left: 15%;
+  animation-delay: -0.75s;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 280px;
+  margin: 30px auto 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50px;
+  padding: 3px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #4f46e5, #22c55e);
+  border-radius: 50px;
+  width: 0%;
+  animation: progress 2.5s ease forwards;
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  30% { width: 45%; }
+  60% { width: 78%; }
+  100% { width: 100%; }
+}
+
+/* Text */
+.loading-text {
+  color: #e2e8f0;
+  font-size: 14px;
+  letter-spacing: 2px;
+  margin-top: 20px;
+}
+
+.loading-text span {
+  color: #22c55e;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Percentage */
+.percentage {
+  font-size: 32px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #4f46e5, #22c55e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 10px;
+}
+
+/* Particles */
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
 </style>
-
 </head>
-
 <body>
 
-<canvas id="matrix"></canvas>
+<div class="circle circle1"></div>
+<div class="circle circle2"></div>
+<div class="circle circle3"></div>
 
-<div class="loader"></div>
-
-<div class="loading-text" id="text"></div>
+<div class="loader-container">
+  <div class="logo">TOJI APIs</div>
+  <div class="percentage" id="percentage">0%</div>
+  <div class="loader"></div>
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+  <div class="loading-text">
+    جاري تهيئة المنصة <span>...</span>
+  </div>
+</div>
 
 <script>
+let percent = 0;
+const percentageEl = document.getElementById('percentage');
 
-/* matrix effect */
-
-let canvas=document.getElementById("matrix")
-let ctx=canvas.getContext("2d")
-
-canvas.height=window.innerHeight
-canvas.width=window.innerWidth
-
-let letters="01"
-letters=letters.split("")
-
-let fontSize=16
-let columns=canvas.width/fontSize
-
-let drops=[]
-
-for(let x=0;x<columns;x++)
-drops[x]=1
-
-function draw(){
-
-ctx.fillStyle="rgba(0,0,0,0.05)"
-ctx.fillRect(0,0,canvas.width,canvas.height)
-
-ctx.fillStyle="#00ffaa"
-ctx.font=fontSize+"px monospace"
-
-for(let i=0;i<drops.length;i++){
-
-let text=letters[Math.floor(Math.random()*letters.length)]
-
-ctx.fillText(text,i*fontSize,drops[i]*fontSize)
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.975)
-drops[i]=0
-
-drops[i]++
-
+function updatePercentage() {
+  if (percent <= 100) {
+    percentageEl.textContent = percent + '%';
+    percent++;
+    setTimeout(updatePercentage, 25);
+  }
 }
+updatePercentage();
 
-}
-
-setInterval(draw,35)
-
-/* typing loading text */
-
-let text="Loading Dashboard..."
-let i=0
-
-function typing(){
-
-if(i<text.length){
-
-document.getElementById("text").innerHTML+=text.charAt(i)
-i++
-
-setTimeout(typing,80)
-
-}
-
-}
-
-typing()
-
-/* redirect */
-
-setTimeout(function(){
-
-window.location.href="dashboard.html"
-
-},3000)
-
+setTimeout(() => {
+  window.location.href = "dashboard.html";
+}, 2500);
 </script>
-
 </body>
 </html>
