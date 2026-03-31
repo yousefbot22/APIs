@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login</title>
+<title>تسجيل الدخول | TOJI APIs</title>
 
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; font-family:Segoe UI,Arial; }
@@ -111,7 +111,7 @@ h1{ margin-bottom:12px; font-size:30px; letter-spacing:1px;}
   user-select:none;
 }
 
-/* Button with Ripple */
+/* Button */
 button{
   position:relative;
   overflow:hidden;
@@ -127,33 +127,18 @@ button{
   font-weight:bold;
   cursor:pointer;
   transition:0.3s ease;
-  animation: buttonGlow 2s infinite alternate;
 }
 button:hover{
   box-shadow:0 0 30px #00ffaa, 0 0 60px #00c3ff;
   transform:translateY(-3px);
 }
-@keyframes buttonGlow{
-  0%{box-shadow:0 0 15px #00ffaa,0 0 30px #00c3ff;}
-  100%{box-shadow:0 0 30px #00ffaa,0 0 60px #00c3ff;}
+button:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
 }
-
-/* Ripple Effect */
-button:after{
-  content:"";
-  position:absolute;
-  width:100px;
-  height:100px;
-  background: rgba(255,255,255,0.2);
-  display:block;
-  border-radius:50%;
-  transform: scale(0);
-  opacity:0;
-  pointer-events:none;
-  animation: ripple 0.6s linear;
-}
-@keyframes ripple{
-  to { transform: scale(4); opacity:0; }
+button:disabled:hover{
+  transform:none;
+  box-shadow:none;
 }
 
 /* Messages */
@@ -164,13 +149,29 @@ button:after{
   font-size:14px;
   display:none;
 }
-.msg-error{ background:#ff4d4d33; color:#ff8080; }
-.msg-success{ background:#00ffaa33; color:#6bffd6; }
+.msg-error{ background:#ff4d4d33; color:#ff8080; border:1px solid #ff4d4d; }
+.msg-success{ background:#00ffaa33; color:#6bffd6; border:1px solid #00ffaa; }
 
 /* Switch */
 .switch{ margin-top:25px; font-size:14px; }
-.switch a{ color:#00ffaa; text-decoration:none; }
+.switch a{ color:#00ffaa; text-decoration:none; transition:0.2s; }
+.switch a:hover{ text-shadow:0 0 8px #00ffaa; }
 
+/* Loading spinner inside button */
+.loader-spinner{
+  display:inline-block;
+  width:18px;
+  height:18px;
+  border:2px solid #fff;
+  border-top-color:transparent;
+  border-radius:50%;
+  animation:spin 0.6s linear infinite;
+  margin-right:8px;
+  vertical-align:middle;
+}
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
 </style>
 </head>
 <body>
@@ -179,69 +180,151 @@ button:after{
 <div class="light light2"></div>
 
 <div class="card">
-<h1>Welcome Back</h1>
-<p class="subtitle">Login to your account</p>
+<h1>مرحباً بك</h1>
+<p class="subtitle">سجل دخولك إلى TOJI APIs</p>
 
 <div class="input-box">
-  <input id="email" placeholder="Email">
+  <input id="email" type="email" placeholder="البريد الإلكتروني" autocomplete="email">
 </div>
 
 <div class="input-box">
-  <input id="password" type="password" placeholder="Password">
-  <span class="show" onclick="togglePass()">Show</span>
+  <input id="password" type="password" placeholder="كلمة المرور">
+  <span class="show" onclick="togglePass()">إظهار</span>
 </div>
 
-<button onclick="login()">Login</button>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+  <label style="font-size:13px; color:#9ca3af; cursor:pointer;">
+    <input type="checkbox" id="rememberMe" style="margin-left:5px; cursor:pointer;"> تذكرني
+  </label>
+  <a href="#" onclick="alert('سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك')" style="color:#00ffaa; font-size:13px;">نسيت كلمة المرور؟</a>
+</div>
+
+<button id="loginBtn" onclick="login()">تسجيل الدخول</button>
 <div id="msg"></div>
 
 <p class="switch">
-Don't have an account?
-<a href="register.html">Register</a>
+ليس لديك حساب؟
+<a href="#" onclick="alert('سيتم تفعيل التسجيل قريباً')">إنشاء حساب</a>
 </p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script>
 const supabaseClient = supabase.createClient(
-"https://rcxjwetrmtwxkdqdurfw.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
+  "https://rcxjwetrmtwxkdqdurfw.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
 );
 
 function togglePass(){
-  let pass=document.getElementById("password");
-  pass.type = pass.type==="password" ? "text" : "password";
+  let pass = document.getElementById("password");
+  let showSpan = document.querySelector(".show");
+  if(pass.type === "password"){
+    pass.type = "text";
+    showSpan.textContent = "إخفاء";
+  } else {
+    pass.type = "password";
+    showSpan.textContent = "إظهار";
+  }
+}
+
+// تحميل البريد الإلكتروني إذا كان "تذكرني" مفعل
+window.onload = function(){
+  let savedEmail = localStorage.getItem("rememberEmail");
+  if(savedEmail){
+    document.getElementById("email").value = savedEmail;
+    document.getElementById("rememberMe").checked = true;
+  }
 }
 
 async function login(){
-  let email=document.getElementById("email").value.trim();
-  let password=document.getElementById("password").value.trim();
-  let msg=document.getElementById("msg");
-
-  if(email=="" || password==""){
-    msg.style.display="block";
-    msg.className="msg-error";
-    msg.innerText="Enter email and password";
+  let email = document.getElementById("email").value.trim();
+  let password = document.getElementById("password").value.trim();
+  let msg = document.getElementById("msg");
+  let loginBtn = document.getElementById("loginBtn");
+  
+  // إخفاء أي رسالة سابقة
+  msg.style.display = "none";
+  
+  // التحقق من الحقول
+  if(email == "" || password == ""){
+    msg.style.display = "block";
+    msg.className = "msg-error";
+    msg.innerText = "❌ الرجاء إدخال البريد الإلكتروني وكلمة المرور";
     return;
   }
-
-  let {data,error}=await supabaseClient.auth.signInWithPassword({
-    email:email,
-    password:password
-  });
-
-  if(error){
-    msg.style.display="block";
-    msg.className="msg-error";
-    msg.innerText=error.message;
-  }else{
-    localStorage.setItem("user","true");
-    localStorage.setItem("email",email);
-    msg.style.display="block";
-    msg.className="msg-success";
-    msg.innerText="Login successful...";
-    setTimeout(()=>{ window.location="loading.html"; },1000);
+  
+  // التحقق من صيغة البريد
+  let emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+  if(!emailRegex.test(email)){
+    msg.style.display = "block";
+    msg.className = "msg-error";
+    msg.innerText = "❌ البريد الإلكتروني غير صالح";
+    return;
+  }
+  
+  // تعطيل الزر أثناء التحميل
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = '<span class="loader-spinner"></span> جاري التسجيل...';
+  
+  try {
+    let { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+    
+    if(error){
+      msg.style.display = "block";
+      msg.className = "msg-error";
+      if(error.message.includes("Invalid login credentials")){
+        msg.innerText = "❌ البريد الإلكتروني أو كلمة المرور غير صحيحة";
+      } else if(error.message.includes("Email not confirmed")){
+        msg.innerText = "❌ الرجاء تأكيد بريدك الإلكتروني أولاً";
+      } else {
+        msg.innerText = "❌ " + error.message;
+      }
+      loginBtn.disabled = false;
+      loginBtn.innerHTML = "تسجيل الدخول";
+    } else {
+      // حفظ الجلسة
+      localStorage.setItem("user", "true");
+      localStorage.setItem("email", email);
+      
+      // حفظ "تذكرني"
+      if(document.getElementById("rememberMe").checked){
+        localStorage.setItem("rememberEmail", email);
+      } else {
+        localStorage.removeItem("rememberEmail");
+      }
+      
+      msg.style.display = "block";
+      msg.className = "msg-success";
+      msg.innerText = "✅ تم تسجيل الدخول بنجاح... جاري التحويل";
+      
+      // التحويل بعد ثانيتين
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+    }
+  } catch(err) {
+    msg.style.display = "block";
+    msg.className = "msg-error";
+    msg.innerText = "❌ حدث خطأ، حاول مرة أخرى";
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = "تسجيل الدخول";
   }
 }
+
+// الضغط على Enter
+document.getElementById("password").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    login();
+  }
+});
+document.getElementById("email").addEventListener("keypress", function(e){
+  if(e.key === "Enter"){
+    login();
+  }
+});
 </script>
 </body>
 </html>
