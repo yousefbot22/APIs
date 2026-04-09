@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
 
-    const api = `https://www.emam-api.web.id/home/sections/Download/api/Youtube/ymcdn?url=${encodeURIComponent(url)}`
+    const api = `https://www.emam-api.web.id/home/sections/Download/api/api/download?url=${encodeURIComponent(url)}`
     const response = await fetch(api)
 
     let data
