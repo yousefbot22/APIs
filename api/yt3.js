@@ -11,7 +11,7 @@ message: "ضع رابط يوتيوب"
 
 try {
 
-const api = `https://obito-mr-apis.vercel.app/api/download/youtube?url=${encodeURIComponent(url)}`
+const api = `https://www.emam-api.web.id/home/sections/Download/api/Youtube/ymcdn?url=${encodeURIComponent(url)}`
 
 const response = await fetch(api)
 const data = await response.json()
