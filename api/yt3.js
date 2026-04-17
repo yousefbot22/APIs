@@ -1,97 +1,77 @@
 export default async function handler(req, res) {
+  const { url, type } = req.query
 
-  const { url } = req.query
-
-  // ✅ التحقق من الرابط
   if (!url || !url.includes("youtu")) {
     return res.status(400).json({
       success: false,
-      author: "TOJI",
-      message: "ضع رابط يوتيوب صالح"
+      message: "حط رابط يوتيوب صحيح"
     })
   }
 
   try {
-
     const api = `https://www.emam-api.web.id/home/sections/Download/api/api/download?url=${encodeURIComponent(url)}`
-    const response = await fetch(api)
-
-    let data
-    try {
-      data = await response.json()
-    } catch (e) {
-      return res.status(500).json({
-        success: false,
-        author: "TOJI",
-        message: "حدث خطأ أثناء التحميل",
-        error: "البيانات التي رجعت من المصدر ليست JSON صالح"
-      })
-    }
-
-    // ✅ التحقق من وجود البيانات
-    if (!data.status || !data.data?.medias || data.data.medias.length === 0) {
-      return res.status(500).json({
-        success: false,
-        author: "TOJI",
-        message: "فشل الحصول على الصوت من المصدر",
-        error: "لا توجد وسائط متاحة"
-      })
-    }
-
-    // ✅ البحث عن أفضل جودة صوت
-    let audioUrl = null
-    let selectedFormat = null
     
-    // ترتيب الجودة (الأفضل أولاً)
-    const qualityOrder = ['251', '140', '250', '249', '139']
-    
-    for (const quality of qualityOrder) {
-      const found = data.data.medias.find(m => m.formatId === quality && m.type === 'audio')
-      if (found) {
-        audioUrl = found.url
-        selectedFormat = found
-        break
+    const response = await fetch(api, {
+      headers: {
+        "User-Agent": "Mozilla/5.0"
       }
+    })
+
+    const data = await response.json()
+
+    if (!data.medias) {
+      return res.json({ success: false, message: "فشل جلب البيانات" })
     }
-    
-    // إذا لم يجد، خذ أول audio موجود
-    if (!audioUrl) {
-      const firstAudio = data.data.medias.find(m => m.type === 'audio')
-      if (firstAudio) {
-        audioUrl = firstAudio.url
-        selectedFormat = firstAudio
-      }
+
+    // 🎧 فلترة الصوت
+    const audios = data.medias.filter(m => m.type === "audio")
+    const videos = data.medias.filter(m => m.type === "video")
+
+    // ترتيب الجودة
+    const audioOrder = ["251", "140", "250", "249", "139"]
+
+    let bestAudio = null
+    for (const q of audioOrder) {
+      bestAudio = audios.find(a => a.formatId == q)
+      if (bestAudio) break
     }
-    
-    if (!audioUrl) {
-      return res.status(500).json({
-        success: false,
-        author: "TOJI",
-        message: "فشل الحصول على رابط الصوت",
-        error: "لا يوجد رابط صوت متاح"
+    if (!bestAudio) bestAudio = audios[0]
+
+    // 🎥 أفضل فيديو (720 أو أقل عشان الحجم)
+    let bestVideo = videos.find(v => v.formatId == "18") || videos[0]
+
+    // 🔥 اختيار النوع
+    if (type === "audio") {
+      return res.json({
+        success: true,
+        title: data.title,
+        thumbnail: data.thumbnail,
+        download: bestAudio.url
       })
     }
 
-    // ✅ الرد النهائي مع رابط الصوت
-    return res.status(200).json({
+    if (type === "video") {
+      return res.json({
+        success: true,
+        title: data.title,
+        thumbnail: data.thumbnail,
+        download: bestVideo.url
+      })
+    }
+
+    // 🎬 تشغيل (preview)
+    return res.json({
       success: true,
-      author: "TOJI",
-      title: data.data.title,
-      thumbnail: data.data.thumbnail,
-      duration: data.data.duration,
-      audio: {
-        url: audioUrl,
-        quality: selectedFormat.label || selectedFormat.formatId,
-        extension: selectedFormat.ext,
-        bitrate: selectedFormat.bitrate
-      }
+      title: data.title,
+      thumbnail: data.thumbnail,
+      audio: bestAudio.url,
+      video: bestVideo.url
     })
 
   } catch (err) {
     return res.status(500).json({
       success: false,
-      author: "TOJI",
-      message: "حدث خطأ أثناء التحميل",
+      message: "حصل خطأ",
       error: err.message
     })
   }
