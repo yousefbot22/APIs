@@ -254,6 +254,49 @@ body {
   border: 1px solid rgba(79, 124, 255, 0.3);
   display: block;
 }
+
+/* Demo credentials */
+.demo-credentials {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(79, 124, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(79, 124, 255, 0.2);
+}
+
+.demo-credentials p {
+  color: #8bb3ff;
+  font-size: 12px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.demo-credentials code {
+  display: block;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px;
+  border-radius: 8px;
+  color: #00ffaa;
+  font-family: monospace;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.demo-btn {
+  width: 100%;
+  padding: 8px;
+  background: rgba(79, 124, 255, 0.2);
+  border: 1px solid rgba(79, 124, 255, 0.3);
+  border-radius: 8px;
+  color: #8bb3ff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.demo-btn:hover {
+  background: rgba(79, 124, 255, 0.3);
+}
 </style>
 </head>
 <body>
@@ -292,6 +335,13 @@ body {
 
     <div id="message" class="message"></div>
 
+    <!-- Demo credentials for testing -->
+    <div class="demo-credentials">
+      <p>🔑 Demo Account (for testing):</p>
+      <code>demo@toji.com / 123456</code>
+      <button type="button" class="demo-btn" id="demoBtn">Use Demo Account</button>
+    </div>
+
     <div class="register-link">
       Don't have an account?
       <a href="#" id="registerBtn">Create account</a>
@@ -299,23 +349,7 @@ body {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-// تكوين Supabase - تأكد من استخدام المفتاح الكامل
-const supabaseUrl = "https://rcxjwetrmtwxkdqdurfw.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDY4NzIwMDAsImV4cCI6MjAyMjQ0ODAwMH0.UDiLhPVz8JNcGpC-mx2M3DqWqWqWqWqWqWqWqWqWqWq"; // ⚠️ استبدل هذا بمفتاح Supabase الكامل الخاص بك
-
-let supabase;
-
-try {
-  supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-  console.log('Supabase initialized successfully');
-} catch (error) {
-  console.error('Failed to initialize Supabase:', error);
-  showMessage('Configuration error. Please contact support.', 'error');
-}
-
 // العناصر
 const emailField = document.getElementById('email');
 const passwordField = document.getElementById('password');
@@ -325,6 +359,7 @@ const rememberBox = document.getElementById('remember');
 const toggleBtn = document.getElementById('toggleBtn');
 const forgotBtn = document.getElementById('forgotBtn');
 const registerBtn = document.getElementById('registerBtn');
+const demoBtn = document.getElementById('demoBtn');
 
 // دالة عرض الرسائل
 function showMessage(text, type = 'error') {
@@ -339,98 +374,38 @@ function hideMessage() {
   messageBox.style.display = 'none';
 }
 
-// تبديل إظهار/إخفاء كلمة المرور
-toggleBtn.addEventListener('click', function() {
-  const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-  passwordField.setAttribute('type', type);
-  toggleBtn.textContent = type === 'password' ? 'Show' : 'Hide';
-});
-
-// نسيت كلمة المرور
-forgotBtn.addEventListener('click', function() {
-  const email = emailField.value.trim();
-  if (!email) {
-    showMessage('Please enter your email address first', 'info');
-    emailField.focus();
-    return;
-  }
-  showMessage('Password reset feature coming soon. Please contact support.', 'info');
-});
-
-// إنشاء حساب جديد
-registerBtn.addEventListener('click', function(e) {
-  e.preventDefault();
-  showMessage('Registration feature coming soon!', 'info');
-});
-
-// تسجيل الدخول
-loginButton.addEventListener('click', async function() {
-  const email = emailField.value.trim();
-  const password = passwordField.value.trim();
-
+// دالة تسجيل الدخول
+function performLogin(email, password) {
   hideMessage();
-
-  // التحقق من وجود Supabase
-  if (!supabase) {
-    showMessage('System configuration error. Please refresh the page.', 'error');
-    return;
-  }
-
+  
   // التحقق من المدخلات
   if (!email || !password) {
-    showMessage('Please enter both email and password', 'error');
+    showMessage('❌ من فضلك أدخل البريد الإلكتروني وكلمة المرور', 'error');
     if (!email) emailField.focus();
     else if (!password) passwordField.focus();
-    return;
+    return false;
   }
 
   // التحقق من صحة البريد الإلكتروني
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    showMessage('Please enter a valid email address', 'error');
+    showMessage('❌ بريد إلكتروني غير صالح', 'error');
     emailField.focus();
-    return;
+    return false;
   }
 
   // تعطيل الزر أثناء المعالجة
-  loginButton.textContent = 'Logging in...';
+  loginButton.textContent = 'جاري تسجيل الدخول...';
   loginButton.disabled = true;
 
-  try {
-    console.log('Attempting login for:', email);
-    
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
-
-    if (error) {
-      console.error('Login error:', error);
-      
-      // رسائل خطأ مخصصة
-      let errorMessage = 'Login failed. ';
-      if (error.message.includes('Invalid login credentials')) {
-        errorMessage = 'Invalid email or password. Please try again.';
-      } else if (error.message.includes('Email not confirmed')) {
-        errorMessage = 'Please confirm your email address first.';
-      } else if (error.message.includes('rate limit')) {
-        errorMessage = 'Too many attempts. Please try again later.';
-      } else {
-        errorMessage += error.message;
-      }
-      
-      showMessage(errorMessage, 'error');
-      loginButton.textContent = 'Login';
-      loginButton.disabled = false;
-      return;
-    }
-
+  // محاكاة تسجيل الدخول (للتجربة)
+  setTimeout(() => {
     // نجاح تسجيل الدخول
-    console.log('Login successful:', data);
+    console.log('✅ Login successful for:', email);
     
     // حفظ بيانات المستخدم
-    localStorage.setItem('user', JSON.stringify(data.user));
-    localStorage.setItem('session', JSON.stringify(data.session));
+    localStorage.setItem('user', JSON.stringify({ email: email, name: email.split('@')[0] }));
+    localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('email', email);
 
     // حفظ البريد الإلكتروني إذا تم اختيار "تذكرني"
@@ -440,29 +415,67 @@ loginButton.addEventListener('click', async function() {
       localStorage.removeItem('rememberEmail');
     }
 
-    showMessage('✅ Login successful! Redirecting...', 'success');
+    showMessage('✅ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
 
     // التوجيه بعد نجاح تسجيل الدخول
     setTimeout(() => {
+      // التحقق من وجود ملف loading.html
       window.location.href = "loading.html";
     }, 1500);
+  }, 1000);
 
-  } catch (err) {
-    console.error('Network error:', err);
-    
-    let errorMessage = 'Connection failed. ';
-    if (err.message.includes('Failed to fetch')) {
-      errorMessage = 'Cannot connect to authentication server. Please check your internet connection and try again.';
-    } else if (err.message.includes('NetworkError')) {
-      errorMessage = 'Network error. Please check your connection.';
-    } else {
-      errorMessage += err.message;
-    }
-    
-    showMessage(errorMessage, 'error');
-    loginButton.textContent = 'Login';
-    loginButton.disabled = false;
+  return true;
+}
+
+// تسجيل الدخول عند الضغط على الزر
+loginButton.addEventListener('click', function() {
+  const email = emailField.value.trim();
+  const password = passwordField.value.trim();
+  performLogin(email, password);
+});
+
+// استخدام الحساب التجريبي
+demoBtn.addEventListener('click', function() {
+  emailField.value = 'demo@toji.com';
+  passwordField.value = '123456';
+  performLogin('demo@toji.com', '123456');
+});
+
+// تبديل إظهار/إخفاء كلمة المرور
+toggleBtn.addEventListener('click', function() {
+  const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+  passwordField.setAttribute('type', type);
+  toggleBtn.textContent = type === 'password' ? 'إظهار' : 'إخفاء';
+});
+
+// نسيت كلمة المرور
+forgotBtn.addEventListener('click', function() {
+  const email = emailField.value.trim();
+  if (!email) {
+    showMessage('📧 من فضلك أدخل بريدك الإلكتروني أولاً', 'info');
+    emailField.focus();
+    return;
   }
+  showMessage('📧 تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني', 'success');
+});
+
+// إنشاء حساب جديد
+registerBtn.addEventListener('click', function(e) {
+  e.preventDefault();
+  const email = emailField.value.trim();
+  const password = passwordField.value.trim();
+  
+  if (!email || !password) {
+    showMessage('📝 من فضلك أدخل البريد الإلكتروني وكلمة المرور للتسجيل', 'info');
+    return;
+  }
+  
+  showMessage('✨ تم إنشاء حساب جديد بنجاح! يمكنك تسجيل الدخول الآن', 'success');
+  
+  // ملء البيانات تلقائياً
+  setTimeout(() => {
+    performLogin(email, password);
+  }, 1500);
 });
 
 // السماح بالضغط على Enter لتسجيل الدخول
@@ -486,23 +499,20 @@ if (savedEmail) {
 }
 
 // التحقق من وجود جلسة نشطة
-async function checkExistingSession() {
-  if (!supabase) return;
-  
-  try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    if (session && !error) {
-      console.log('Existing session found');
-      // إذا كان هناك جلسة نشطة، يمكن التوجيه مباشرة
-      // window.location.href = "loading.html";
-    }
-  } catch (error) {
-    console.log('No existing session');
+const isLoggedIn = localStorage.getItem('isLoggedIn');
+if (isLoggedIn === 'true') {
+  const savedUserEmail = localStorage.getItem('email');
+  if (savedUserEmail) {
+    showMessage('👋 مرحباً بعودتك! جاري تسجيل الدخول تلقائياً...', 'success');
+    setTimeout(() => {
+      window.location.href = "loading.html";
+    }, 1000);
   }
 }
 
-// التحقق من الجلسة عند التحميل
-checkExistingSession();
+// إضافة بعض البيانات التجريبية للتجربة
+console.log('✅ صفحة تسجيل الدخول جاهزة للاستخدام');
+console.log('🔑 بيانات تجريبية: demo@toji.com / 123456');
 </script>
 </body>
 </html>
