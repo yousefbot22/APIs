@@ -272,47 +272,22 @@ body {
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
-// Supabase Config
-const _supabase = supabase.createClient(
-  "https://rcxjwetrmtwxkdqdurfw.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJjeGp3ZXRybXR3eGtkcWR1cmZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDMyNzQsImV4cCI6MjA4ODQxOTI3NH0.WXzfjufXlpeHPZhNBiSShNd19eRNf_CtTrnMj7CNnf8"
-);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-// Get DOM elements
+<script>
+const supabaseUrl = "https://rcxjwetrmtwxkdqdurfw.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+// العناصر
 const emailField = document.getElementById('email');
 const passwordField = document.getElementById('password');
 const loginButton = document.getElementById('loginBtn');
-const toggleButton = document.getElementById('toggleBtn');
-const forgotButton = document.getElementById('forgotBtn');
-const registerButton = document.getElementById('registerBtn');
 const messageBox = document.getElementById('message');
 const rememberBox = document.getElementById('remember');
 
-// Toggle Password
-toggleButton.onclick = function() {
-  if (passwordField.type === 'password') {
-    passwordField.type = 'text';
-    toggleButton.textContent = 'Hide';
-  } else {
-    passwordField.type = 'password';
-    toggleButton.textContent = 'Show';
-  }
-};
-
-// Forgot Password
-forgotButton.onclick = function() {
-  alert('📧 Password reset link will be sent to your email');
-};
-
-// Register
-registerButton.onclick = function() {
-  alert('📝 Registration page coming soon!');
-};
-
-// Login Function
-loginButton.onclick = async function() {
+// تسجيل الدخول
+loginButton.onclick = async () => {
   const email = emailField.value.trim();
   const password = passwordField.value.trim();
 
@@ -321,85 +296,60 @@ loginButton.onclick = async function() {
 
   if (!email || !password) {
     messageBox.className = 'message error';
-    messageBox.textContent = '❌ Please enter email and password';
+    messageBox.textContent = '❌ اكتب الايميل والباسورد';
     messageBox.style.display = 'block';
     return;
   }
 
-  const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    messageBox.className = 'message error';
-    messageBox.textContent = '❌ Invalid email format';
-    messageBox.style.display = 'block';
-    return;
-  }
-
-  loginButton.textContent = 'Logging in...';
+  loginButton.innerText = 'Logging...';
   loginButton.disabled = true;
 
   try {
     const { data, error } = await _supabase.auth.signInWithPassword({
-      email: email,
-      password: password
+      email,
+      password
     });
 
     if (error) {
       messageBox.className = 'message error';
-      if (error.message.includes('Invalid login credentials')) {
-        messageBox.textContent = '❌ Wrong email or password';
-      } else if (error.message.includes('Email not confirmed')) {
-        messageBox.textContent = '❌ Please confirm your email first';
-      } else {
-        messageBox.textContent = '❌ ' + error.message;
-      }
+      messageBox.textContent = '❌ ' + error.message;
       messageBox.style.display = 'block';
-      loginButton.textContent = 'Login';
+      loginButton.innerText = 'Login';
       loginButton.disabled = false;
-    } else {
-      localStorage.setItem('user', 'true');
-      localStorage.setItem('email', email);
-      
-      if (rememberBox.checked) {
-        localStorage.setItem('rememberEmail', email);
-      } else {
-        localStorage.removeItem('rememberEmail');
-      }
-
-      messageBox.className = 'message success';
-      messageBox.textContent = '✅ Login successful! Redirecting...';
-      messageBox.style.display = 'block';
-
-      setTimeout(function() {
-        window.location.href = 'loading.html';
-      }, 1200);
+      return;
     }
+
+    // نجاح
+    localStorage.setItem('user', 'true');
+    localStorage.setItem('email', email);
+
+    if (rememberBox.checked) {
+      localStorage.setItem('rememberEmail', email);
+    }
+
+    messageBox.className = 'message success';
+    messageBox.textContent = '✅ تم تسجيل الدخول';
+    messageBox.style.display = 'block';
+
+    setTimeout(() => {
+      window.location.href = "loading.html";
+    }, 1000);
+
   } catch (err) {
     messageBox.className = 'message error';
-    messageBox.textContent = '❌ Something went wrong';
+    messageBox.textContent = '❌ في مشكلة في الاتصال';
     messageBox.style.display = 'block';
-    loginButton.textContent = 'Login';
+    loginButton.innerText = 'Login';
     loginButton.disabled = false;
   }
 };
 
-// Load saved email
+// حفظ الايميل
 const savedEmail = localStorage.getItem('rememberEmail');
 if (savedEmail) {
   emailField.value = savedEmail;
   rememberBox.checked = true;
 }
-
-// Enter key support
-passwordField.onkeypress = function(e) {
-  if (e.key === 'Enter') {
-    loginButton.click();
-  }
-};
-emailField.onkeypress = function(e) {
-  if (e.key === 'Enter') {
-    loginButton.click();
-  }
-};
 </script>
 </body>
 </html>
