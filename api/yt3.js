@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { url, type } = req.query
 
-  if (!url || !url.includes("youtu")) {
+  if (!url) {
     return res.status(400).json({ success: false, message: "حط رابط يوتيوب صحيح" })
   }
 
@@ -26,15 +26,39 @@ export default async function handler(req, res) {
 
     let bestVideo = videos.find(v => v.formatId == "18") || videos[0]
 
-    // 🔥 لو type=stream يحمل ويبعت الملف مباشرة
-    if (type === "stream") {
-      const targetUrl = req.query.audio === "false" ? bestVideo.url : bestAudio.url
-      const fileRes = await fetch(targetUrl)
-      if (!fileRes.ok) return res.status(403).json({ success: false, message: "فشل تحميل الملف" })
+    if (type === "stream-audio") {
+      const fileRes = await fetch(bestAudio.url)
+      if (!fileRes.ok) return res.status(403).json({ success: false, message: "فشل تحميل الصوت" })
+      
+      // تحميل كـ buffer بدل stream
+      const buffer = Buffer.from(await fileRes.arrayBuffer())
+      res.setHeader("Content-Type", "audio/webm")
+      res.setHeader("Content-Disposition", 'attachment; filename="audio.webm"')
+      return res.send(buffer)
+    }
 
-      const contentType = req.query.audio === "false" ? "video/mp4" : "audio/webm"
-      res.setHeader("Content-Type", contentType)
-      res.setHeader("Content-Disposition", `attachment; filename="file"`)
+    if (type === "stream-video") {
+      const fileRes = await fetch(bestVideo.url)
+      if (!fileRes.ok) return res.status(403).json({ success: false, message: "فشل تحميل الفيديو" })
+      
+      const buffer = Buffer.from(await fileRes.arrayBuffer())
+      res.setHeader("Content-Type", "video/mp4")
+      res.setHeader("Content-Disposition", 'attachment; filename="video.mp4"')
+      return res.send(buffer)
+    }
+
+    return res.json({
+      success: true,
+      title: data.title,
+      thumbnail: data.thumbnail,
+      audio: bestAudio.url,
+      video: bestVideo.url
+    })
+
+  } catch (err) {
+    return res.status(500).json({ success: false, message: "حصل خطأ", error: err.message })
+  }
+}      res.setHeader("Content-Disposition", `attachment; filename="file"`)
 
       // pipe الملف مباشرة للمستخدم
       const { Readable } = await import("stream")
