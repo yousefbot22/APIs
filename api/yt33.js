@@ -1,129 +1,170 @@
+
 export default async function handler(req, res) {
-  const { url, type } = req.query
+  const { url, type } = req.query;
 
   if (!url) {
-    return res.status(400).json({ success: false, message: "حط رابط يوتيوب صحيح" })
+    return res.status(400).json({
+      success: false,
+      message: "حط رابط يوتيوب صحيح"
+    });
   }
 
   try {
-    const api = `https://www.emam-api.web.id/home/sections/Download/api/api/download?url=${encodeURIComponent(url)}`
+    const api =
+      `https://www.emam-api.web.id/home/sections/Download/api/api/download?url=${encodeURIComponent(url)}`;
 
-    const response = await fetch(api, { headers: { "User-Agent": "Mozilla/5.0" } })
-    const data = await response.json()
+    const response = await fetch(api, {
+      headers: {
+        "User-Agent": "Mozilla/5.0"
+      }
+    });
 
-    if (!data.medias) return res.json({ success: false, message: "فشل جلب البيانات" })
+    if (!response.ok) {
+      throw new Error(`API Error: ${response.status}`);
+    }
 
-    const audios = data.medias.filter(m => m.type === "audio")
-    const videos = data.medias.filter(m => m.type === "video")
+    const data = await response.json();
 
-    const audioOrder = ["251", "140", "250", "249", "139"]
-    let bestAudio = null
+    if (!data.medias || !Array.isArray(data.medias)) {
+      return res.status(502).json({
+        success: false,
+        message: "فشل جلب البيانات"
+      });
+    }
+
+    const audios = data.medias.filter(
+      m => m.type === "audio" && m.url
+    );
+
+    const videos = data.medias.filter(
+      m => m.type === "video" && m.url
+    );
+
+    // اختيار أفضل صوت
+    const audioOrder = ["251", "140", "250", "249", "139"];
+
+    let bestAudio = null;
+
     for (const q of audioOrder) {
-      bestAudio = audios.find(a => a.formatId == q)
-      if (bestAudio) break
-    }
-    if (!bestAudio) bestAudio = audios[0]
+      bestAudio = audios.find(
+        a => String(a.formatId) === q
+      );
 
-    let bestVideo = videos.find(v => v.formatId == "18") || videos[0]
-
-    if (type === "stream-audio") {
-      const fileRes = await fetch(bestAudio.url)
-      if (!fileRes.ok) return res.status(403).json({ success: false, message: "فشل تحميل الصوت" })
-
-      // تحميل كـ buffer بدل stream
-      const buffer = Buffer.from(await fileRes.arrayBuffer())
-      res.setHeader("Content-Type", "audio/webm")
-      res.setHeader("Content-Disposition", 'attachment; filename="audio.webm"')
-      return res.send(buffer)
+      if (bestAudio) break;
     }
 
-    if (type === "stream-video") {
-      const fileRes = await fetch(bestVideo.url)
-      if (!fileRes.ok) return res.status(403).json({ success: false, message: "فشل تحميل الفيديو" })
+    if (!bestAudio) bestAudio = audios[0];
 
-      const buffer = Buffer.from(await fileRes.arrayBuffer())
-      res.setHeader("Content-Type", "video/mp4")
-      res.setHeader("Content-Disposition", 'attachment; filename="video.mp4"')
-      return res.send(buffer)
+    // اختيار أفضل فيديو
+    const bestVideo =
+      videos.find(v => String(v.formatId) === "18") ||
+      videos[0];
+
+    // التحقق من الملفات
+    if (
+      (type === "audio" || type === "stream-audio") &&
+      !bestAudio
+    ) {
+      return res.status(404).json({
+        success: false,
+        message: "الصوت غير متاح"
+      });
     }
 
-    return res.json({
-      success: true,
-      title: data.title,
-      thumbnail: data.thumbnail,
-      audio: bestAudio.url,
-      video: bestVideo.url
-    })
-
-  } catch (err) {
-    return res.status(500).json({ success: false, message: "حصل خطأ", error: err.message })
-  }
-}      res.setHeader("Content-Disposition", `attachment; filename="file"`)
-
-      // pipe الملف مباشرة للمستخدم
-      const { Readable } = await import("stream")
-      Readable.fromWeb(fileRes.body).pipe(res)
-      return
+    if (
+      (type === "video" || type === "stream-video") &&
+      !bestVideo
+    ) {
+      return res.status(404).json({
+        success: false,
+        message: "الفيديو غير متاح"
+      });
     }
 
+    // رابط الصوت
     if (type === "audio") {
-      return res.json({ success: true, title: data.title, thumbnail: data.thumbnail, download: bestAudio.url })
-    }
-
-    if (type === "video") {
-      return res.json({ success: true, title: data.title, thumbnail: data.thumbnail, download: bestVideo.url })
-    }
-
-    return res.json({
-      success: true,
-      title: data.title,
-      thumbnail: data.thumbnail,
-      audio: bestAudio.url,
-      video: bestVideo.url
-    })
-
-  } catch (err) {
-    return res.status(500).json({ success: false, message: "حصل خطأ", error: err.message })
-  }
-}    }
-    if (!bestAudio) bestAudio = audios[0]
-
-    // 🎥 أفضل فيديو (720 أو أقل عشان الحجم)
-    let bestVideo = videos.find(v => v.formatId == "18") || videos[0]
-
-    // 🔥 اختيار النوع
-    if (type === "audio") {
-      return res.json({
+      return res.status(200).json({
         success: true,
         title: data.title,
         thumbnail: data.thumbnail,
         download: bestAudio.url
-      })
+      });
     }
 
+    // رابط الفيديو
     if (type === "video") {
-      return res.json({
+      return res.status(200).json({
         success: true,
         title: data.title,
         thumbnail: data.thumbnail,
         download: bestVideo.url
-      })
+      });
     }
 
-    // 🎬 تشغيل (preview)
-    return res.json({
+    // تحميل الصوت
+    if (type === "stream-audio") {
+      const fileRes = await fetch(bestAudio.url);
+
+      if (!fileRes.ok) {
+        return res.status(502).json({
+          success: false,
+          message: "فشل تحميل الصوت"
+        });
+      }
+
+      const buffer = Buffer.from(
+        await fileRes.arrayBuffer()
+      );
+
+      res.setHeader("Content-Type", "audio/webm");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="audio.webm"'
+      );
+
+      return res.status(200).send(buffer);
+    }
+
+    // تحميل الفيديو
+    if (type === "stream-video") {
+      const fileRes = await fetch(bestVideo.url);
+
+      if (!fileRes.ok) {
+        return res.status(502).json({
+          success: false,
+          message: "فشل تحميل الفيديو"
+        });
+      }
+
+      const buffer = Buffer.from(
+        await fileRes.arrayBuffer()
+      );
+
+      res.setHeader("Content-Type", "video/mp4");
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="video.mp4"'
+      );
+
+      return res.status(200).send(buffer);
+    }
+
+    // البيانات الافتراضية
+    return res.status(200).json({
       success: true,
       title: data.title,
       thumbnail: data.thumbnail,
-      audio: bestAudio.url,
-      video: bestVideo.url
-    })
+      audio: bestAudio?.url || null,
+      video: bestVideo?.url || null
+    });
 
   } catch (err) {
+    console.error("YouTube API Error:", err);
+
     return res.status(500).json({
       success: false,
       message: "حصل خطأ",
       error: err.message
-    })
+    });
   }
 }
